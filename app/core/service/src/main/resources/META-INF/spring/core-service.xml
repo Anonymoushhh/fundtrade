@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sofa="http://sofastack.io/schema/sofaboot"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd"
+       default-autowire="byName">
+
+    <bean id="fundCompanyRepository" class="com.sdu.fund.core.repository.FundCompanyRepositoryImpl"/>
+    <sofa:service ref="fundCompanyRepository" interface="com.sdu.fund.core.repository.FundCompanyRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean id="fundArchiveRepository" class="com.sdu.fund.core.repository.FundArchiveRepositoryImpl"/>
+    <sofa:service ref="fundArchiveRepository" interface="com.sdu.fund.core.repository.FundArchiveRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean id="fundManagerRepository" class="com.sdu.fund.core.repository.FundManagerRepositoryImpl"/>
+    <sofa:service ref="fundManagerRepository" interface="com.sdu.fund.core.repository.FundManagerRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean id="fundDataRepository" class="com.sdu.fund.core.repository.FundDataRepositoryImpl"/>
+    <sofa:service ref="fundDataRepository" interface="com.sdu.fund.core.repository.FundDataRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+</beans>

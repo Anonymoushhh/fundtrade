@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="fundtrade-test" />
+        <module name="fundtrade-common-service-facade" />
+        <module name="fundtrade-core-model" />
+        <module name="fundtrade-common-dal" />
+        <module name="fundtrade-common-util" />
+        <module name="fundtrade-biz-service-impl" />
+        <module name="fundtrade-biz-shared" />
+        <module name="fundtrade-core-service" />
+        <module name="fundtrade-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="8" />
+  </component>
+  <component name="JavacSettings">
+    <option name="PREFER_TARGET_JDK_COMPILER" value="false" />
+  </component>
+</project>

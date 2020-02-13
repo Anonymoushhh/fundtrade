@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sofa="http://sofastack.io/schema/sofaboot"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd"
+       default-autowire="byName">
+
+    <bean id="fundCompanyRepository" class="com.sdu.fund.core.repository.FundCompanyRepository"/>
+    <bean id="fundArchiveRepository" class="com.sdu.fund.core.repository.FundArchiveRepository"/>
+    <bean id="fundManagerRepository" class="com.sdu.fund.core.repository.FundManagerRepository"/>
+    <bean id="fundDataRepository" class="com.sdu.fund.core.repository.FundDataRepository"/>
+
+
+    <bean class="com.sdu.fund.core.serviceImpl.FundCompanyCrawlingService" id="fundCompanyCrawlingService"/>
+    <sofa:service ref="fundCompanyCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundCompanyCrawlingService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean class="com.sdu.fund.core.serviceImpl.FundDataCrawlingService" id="fundDataCrawlingService"/>
+    <sofa:service ref="fundDataCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundDataCrawlingService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean class="com.sdu.fund.core.serviceImpl.FundArchiveCrawlingService" id="fundArchiveCrawlingService"/>
+    <sofa:service ref="fundArchiveCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundArchiveCrawlingService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean class="com.sdu.fund.core.serviceImpl.FundManagerCrawlingService" id="fundManagerCrawlingService"/>
+    <sofa:service ref="fundManagerCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundManagerCrawlingService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+</beans>
