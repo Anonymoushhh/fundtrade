@@ -5,7 +5,7 @@ import com.sdu.fund.common.dal.entity.FundCompanyDo;
 import org.springframework.beans.BeanUtils;
 
 /**
- * @program: fundtrade
+ * @program: fundproduct
  * @description: 基金公司对象转换类
  * @author: anonymous
  * @create: 2019-11-29 10:51

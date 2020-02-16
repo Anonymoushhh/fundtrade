@@ -31,4 +31,7 @@ public class ResultCode {
 
     /* 全部失败*/
     public static final int  FAILURE = 7;
+
+    /* 未登录*/
+    public static final int  NO_LOGIN = 8;
 }

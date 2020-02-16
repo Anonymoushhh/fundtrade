@@ -6,7 +6,7 @@ import com.sdu.fund.core.model.bo.FundArchive;
 import org.springframework.beans.BeanUtils;
 
 /**
- * @program: fundtrade
+ * @program: fundproduct
  * @description: 基金档案对象转换类
  * @author: anonymous
  * @create: 2019-12-09 22:22

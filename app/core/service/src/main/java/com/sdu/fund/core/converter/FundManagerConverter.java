@@ -5,7 +5,7 @@ import com.sdu.fund.core.model.bo.FundManager;
 import org.springframework.beans.BeanUtils;
 
 /**
- * @program: fundtrade
+ * @program: fundproduct
  * @description:
  * @author: anonymous
  * @create: 2019-12-20 21:27
