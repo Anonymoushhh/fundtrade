@@ -12,6 +12,12 @@
 
     <artifactId>fundtrade-core-model</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.sdu.fund</groupId>
+            <artifactId>fundtrade-common-util</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>

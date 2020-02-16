@@ -6,7 +6,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd"
        default-autowire="byName">
-    <sofa:service ref="dataCrawlingTask" interface="com.sdu.fund.service.shared.Task.Task">
+    <bean id="userService" class="com.sdu.fund.biz.shared.serviceImpl.UserServiceImpl"/>
+    <sofa:service ref="userService" interface="com.sdu.fund.biz.shared.service.UserService">
         <sofa:binding.jvm/>
     </sofa:service>
 </beans>

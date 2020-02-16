@@ -1,2 +1,6 @@
+com\sdu\fund\vo\Response.class
+com\sdu\fund\enums\CodeEnum.class
+com\sdu\fund\controller\FundPurchaseController.class
 com\sdu\fund\controller\SampleRestController.class
+com\sdu\fund\controller\UserAccountController.class
 com\sdu\fund\SOFABootWebApplication.class

@@ -4,7 +4,7 @@ package com.sdu.fund.vo;
 import com.sdu.fund.enums.CodeEnum;
 
 /**
- * @program: fundproduct
+ * @program: fundtrade
  * @description: 统一返回结果抽象类
  * @author: anonymous
  * @create: 2020/2/5 17:49

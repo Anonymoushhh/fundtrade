@@ -181,6 +181,13 @@ public class DateUtil {
         return sdf.format(nowTime.getTime());
     }
 
+    /**
+     * unix时间转date
+     **/
+    public static Date unixToDate(long unixTime) {
+        return new Date(unixTime);
+    }
+
     public static boolean sameDateTime(Date date1,Date date2){
         if(date1==null||date2==null){
             return false;
@@ -192,6 +199,7 @@ public class DateUtil {
         Date date1 = new Date();
 
         boolean b = sameDateTime(date1, DateUtil.strToDate("2019/12/05 6:58:27", DateUtil.FMT_MDYHMS));
+        System.out.println(unixToDate(System.currentTimeMillis()));
     }
  }
 

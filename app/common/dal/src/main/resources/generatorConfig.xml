@@ -61,17 +61,57 @@
             <columnOverride column="investment_strategy" javaType="java.lang.String" jdbcType="VARCHAR" />
             <columnOverride column="dividend_policy" javaType="java.lang.String" jdbcType="VARCHAR" />
         </table>
-        <table tableName="fundCompany" domainObjectName="FundCompanyDo" mapperName="FundCompanyMapper"
+        <table tableName="fund_company" domainObjectName="FundCompanyDo" mapperName="FundCompanyMapper"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>
         </table>
-        <table tableName="fundData" domainObjectName="FundDataDo" mapperName="FundDataMapper"
+        <table tableName="fund_data" domainObjectName="FundDataDo" mapperName="FundDataMapper"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>
         </table>
-        <table tableName="fundManager" domainObjectName="FundManagerDo" mapperName="FundManagerMapper"
+        <table tableName="fund_manager" domainObjectName="FundManagerDo" mapperName="FundManagerMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="user" domainObjectName="UserDo" mapperName="UserMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="hold_positions" domainObjectName="HoldPositionsDo" mapperName="HoldPositionsMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="trade_Order" domainObjectName="TradeOrderDo" mapperName="TradeOrderMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="user_token" domainObjectName="UserTokenDo" mapperName="UserTokenMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="trade_flow" domainObjectName="TradeFlowDo" mapperName="TradeFlowMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="payment" domainObjectName="PaymentDo" mapperName="PaymentMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="user_account" domainObjectName="UserAccountDo" mapperName="UserAccountMapper"
+               enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false" >
+            <property name="useActualColumnNames" value="false"/>
+        </table>
+        <table tableName="user_account_flow" domainObjectName="UserAccountFlowDo" mapperName="UserAccountFlowMapper"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>

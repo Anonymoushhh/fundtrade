@@ -1,8 +1,4 @@
-package com.sdu.fund.core.model.bo;
-
-import com.google.common.collect.Lists;
-
-import java.util.List;
+package com.sdu.fund.core.model.trade.bo;
 
 /**
  * @program: fundproduct

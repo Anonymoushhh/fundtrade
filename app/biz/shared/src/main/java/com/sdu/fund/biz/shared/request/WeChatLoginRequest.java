@@ -1,4 +1,4 @@
-package com.sdu.fund.request;
+package com.sdu.fund.biz.shared.request;
 
 /**
  * @program: fundtrade

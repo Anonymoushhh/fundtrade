@@ -17,11 +17,10 @@
 package com.sdu.fund.controller;
 
 import com.alipay.sofa.runtime.api.annotation.SofaReference;
+import com.sdu.fund.biz.shared.holder.UserContext;
 import com.sdu.fund.biz.shared.service.UserService;
-import com.sdu.fund.biz.shared.vo.UserLoginVo;
-import com.sdu.fund.core.model.account.bo.User;
-import com.sdu.fund.core.model.account.enums.GenderEnum;
-import com.sdu.fund.request.WeChatLoginRequest;
+import com.sdu.fund.biz.shared.vo.UserLoginVO;
+import com.sdu.fund.biz.shared.request.WeChatPurchaseApplyRequest;
 import com.sdu.fund.vo.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,29 +34,25 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2.5.8
  */
 @RestController
-@RequestMapping("/fundTrade/trade")
-public class FundTradeController {
+@RequestMapping("/fundTrade/purchase")
+public class FundPurchaseController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FundTradeController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FundPurchaseController.class);
 
     @SofaReference
     private UserService userService;
 
-    @RequestMapping(value = "/apply", method = RequestMethod.POST)
-    public Response<UserLoginVo> apply(@RequestBody WeChatLoginRequest weChatLoginRequest) {
-        try {
-            User user = new User();
-            user.setNickName(weChatLoginRequest.getNickName());
-            user.setGender(GenderEnum.getEnumByCode(weChatLoginRequest.getGender()));
-            user.setCity(weChatLoginRequest.getCity());
-            user.setProvince(weChatLoginRequest.getProvince());
-            user.setCountry(weChatLoginRequest.getCountry());
+    @SofaReference
+    private UserContext userContext;
 
-            UserLoginVo userLoginVo = userService.weChatLogin(weChatLoginRequest.getCode(),user);
-            return Response.buildSuccessResponse(userLoginVo);
+    @RequestMapping(value = "/apply", method = RequestMethod.POST)
+    public Response<UserLoginVO> apply(@RequestBody WeChatPurchaseApplyRequest weChatPurchaseApplyRequest) {
+        try {
+
+            return Response.buildSuccessResponse();
         } catch (Exception e) {
-            LOGGER.error("微信登录失败，nickName={},msg={}", weChatLoginRequest.getNickName(),
-                    e.getMessage());
+            LOGGER.error("基金购买申请失败，fundCode={},userId={},msg={}", weChatPurchaseApplyRequest.getFundCode(),
+                    userContext.getCurrentUser().getUserId(), e.getMessage());
             return Response.buildErrorResponse();
         }
     }

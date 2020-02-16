@@ -2,7 +2,7 @@ package com.sdu.fund.core.converter;
 
 import com.alibaba.fastjson.JSON;
 import com.sdu.fund.common.dal.entity.FundArchiveDo;
-import com.sdu.fund.core.model.bo.FundArchive;
+import com.sdu.fund.core.model.trade.bo.FundArchive;
 import org.springframework.beans.BeanUtils;
 
 /**

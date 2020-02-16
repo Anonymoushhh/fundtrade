@@ -1,6 +1,6 @@
-package com.sdu.fund.core.model.event;
+package com.sdu.fund.core.model.trade.event;
 
-public enum OrderEvent {
+public enum TradeOrderEvent {
 
     PAY_SUCCESS("paySuccess","支付成功"),
     NO_PAY("noPay","未支付"),
@@ -10,7 +10,7 @@ public enum OrderEvent {
     private String type;
     private String msg;
 
-    OrderEvent(String type, String msg) {
+    TradeOrderEvent(String type, String msg) {
         this.setType(type);
         this.setMsg(msg);
     }

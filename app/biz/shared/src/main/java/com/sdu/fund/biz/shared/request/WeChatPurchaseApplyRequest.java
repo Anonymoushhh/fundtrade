@@ -1,4 +1,4 @@
-package com.sdu.fund.request;
+package com.sdu.fund.biz.shared.request;
 
 /**
  * @program: fundtrade
@@ -11,23 +11,31 @@ public class WeChatPurchaseApplyRequest {
 
     private String fundCode;
 
+    private String fundName;
+
     // 付款金额
-    private String orderAmount;
+    private String tradeOrderAmount;
 
     // 订单类型
-    private String orderType;
+    private String tradeOrderType;
+
+    // 下单渠道
+    private String tradeOrderChannel;
 
     // 费率
-    private Double fee;
+    private String fee;
 
     // 费率扣的金额
-    private Double feeAmount;
+    private String feeAmount;
+
+    // 最终支付金额
+    private String realPayAmount;
 
     // 红包
-    private Double couponId;
+    private String couponId;
 
     // 红包金额
-    private Double couponAmount;
+    private String couponAmount;
 
     public String getFundCode() {
         return fundCode;
@@ -37,51 +45,75 @@ public class WeChatPurchaseApplyRequest {
         this.fundCode = fundCode;
     }
 
-    public String getOrderAmount() {
-        return orderAmount;
+    public String getFundName() {
+        return fundName;
     }
 
-    public void setOrderAmount(String orderAmount) {
-        this.orderAmount = orderAmount;
+    public void setFundName(String fundName) {
+        this.fundName = fundName;
     }
 
-    public String getOrderType() {
-        return orderType;
+    public String getTradeOrderAmount() {
+        return tradeOrderAmount;
     }
 
-    public void setOrderType(String orderType) {
-        this.orderType = orderType;
+    public String getTradeOrderChannel() {
+        return tradeOrderChannel;
     }
 
-    public Double getFee() {
+    public void setTradeOrderChannel(String tradeOrderChannel) {
+        this.tradeOrderChannel = tradeOrderChannel;
+    }
+
+    public void setTradeOrderAmount(String tradeOrderAmount) {
+        this.tradeOrderAmount = tradeOrderAmount;
+    }
+
+    public String getTradeOrderType() {
+        return tradeOrderType;
+    }
+
+    public void setTradeOrderType(String tradeOrderType) {
+        this.tradeOrderType = tradeOrderType;
+    }
+
+    public String getFee() {
         return fee;
     }
 
-    public void setFee(Double fee) {
+    public void setFee(String fee) {
         this.fee = fee;
     }
 
-    public Double getFeeAmount() {
+    public String getFeeAmount() {
         return feeAmount;
     }
 
-    public void setFeeAmount(Double feeAmount) {
+    public void setFeeAmount(String feeAmount) {
         this.feeAmount = feeAmount;
     }
 
-    public Double getCouponId() {
+    public String getRealPayAmount() {
+        return realPayAmount;
+    }
+
+    public void setRealPayAmount(String realPayAmount) {
+        this.realPayAmount = realPayAmount;
+    }
+
+    public String getCouponId() {
         return couponId;
     }
 
-    public void setCouponId(Double couponId) {
+    public void setCouponId(String couponId) {
         this.couponId = couponId;
     }
 
-    public Double getCouponAmount() {
+    public String getCouponAmount() {
         return couponAmount;
     }
 
-    public void setCouponAmount(Double couponAmount) {
+    public void setCouponAmount(String couponAmount) {
         this.couponAmount = couponAmount;
     }
 }

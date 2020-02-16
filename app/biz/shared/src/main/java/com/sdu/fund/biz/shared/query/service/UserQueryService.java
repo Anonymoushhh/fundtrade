@@ -1,6 +1,5 @@
-package com.sdu.fund.biz.shared.service;
+package com.sdu.fund.biz.shared.query.service;
 
-import com.sdu.fund.biz.shared.vo.UserLoginVo;
 import com.sdu.fund.core.model.account.bo.User;
 
 /**
@@ -9,7 +8,8 @@ import com.sdu.fund.core.model.account.bo.User;
  * @author: anonymous
  * @create: 2020/2/14 18:11
  **/
-public interface UserService {
+public interface UserQueryService {
 
-    public UserLoginVo weChatLogin(String code, User user) throws Exception;
+    public User queryLoginUser(String token);
+
 }

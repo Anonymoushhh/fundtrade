@@ -3,10 +3,10 @@ package com.sdu.fund.core.repository;
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundManagerMapper;
 import com.sdu.fund.common.result.Result;
-import com.sdu.fund.common.util.ResultUtil;
+import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.FundManagerConverter;
-import com.sdu.fund.core.model.bo.FundManager;
+import com.sdu.fund.core.model.trade.bo.FundManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +26,12 @@ public class FundManagerRepositoryImpl implements FundManagerRepository {
     @Autowired
     private FundManagerMapper fundManagerMapper;
 
+    @Override
     public FundManager get(String managerId) {
         return FundManagerConverter.FundManagerDoconvert2FundManager(fundManagerMapper.selectByPrimaryKey(managerId));
     }
 
+    @Override
     public Result add(FundManager fundManager) {
         // 预校验
         boolean check = preCheck(fundManager);
@@ -59,6 +61,7 @@ public class FundManagerRepositoryImpl implements FundManagerRepository {
         }
     }
 
+    @Override
     public Result update(FundManager fundManager) {
         // 预校验
         boolean check = preCheck(fundManager);
@@ -89,6 +92,7 @@ public class FundManagerRepositoryImpl implements FundManagerRepository {
         }
     }
 
+    @Override
     public Result delete(String managerId) {
         try {
             int count = fundManagerMapper.deleteByPrimaryKey(managerId);

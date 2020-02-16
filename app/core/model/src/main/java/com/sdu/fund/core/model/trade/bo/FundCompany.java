@@ -1,4 +1,4 @@
-package com.sdu.fund.core.model.bo;
+package com.sdu.fund.core.model.trade.bo;
 
 import java.util.Date;
 

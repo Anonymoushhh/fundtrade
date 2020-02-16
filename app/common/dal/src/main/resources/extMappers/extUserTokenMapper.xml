@@ -28,11 +28,11 @@
     user_id, open_id, nick_name, gender, city, province, country, authority, status, 
     gmt_create, gmt_modified
   </sql>
-  <select id="selectByOpenId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectUserIdByToken" parameterType="java.lang.String" resultType="java.lang.Long">
     select 
-    <include refid="Base_Column_List" />
-    from user
-    where open_id = #{openId,jdbcType=VARCHAR}
+    user_id
+    from user_token
+    where token = #{token,jdbcType=VARCHAR}
   </select>
 
 </mapper>

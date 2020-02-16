@@ -1,10 +1,8 @@
 package com.sdu.fund.core.converter;
 
-import com.sdu.fund.common.dal.entity.UserDo;
-import com.sdu.fund.core.model.account.bo.User;
-import com.sdu.fund.core.model.account.enums.AuthorityEnum;
-import com.sdu.fund.core.model.account.enums.GenderEnum;
-import com.sdu.fund.core.model.account.enums.UserStatusEnum;
+import com.sdu.fund.common.dal.entity.UserTokenDo;
+import com.sdu.fund.core.model.account.bo.UserToken;
+import com.sdu.fund.core.model.account.enums.TokenTypeEnum;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -13,31 +11,27 @@ import org.springframework.beans.BeanUtils;
  * @author: anonymous
  * @create: 2020/2/14 19:50
  **/
-public class UserConverter {
+public class UserTokenConverter {
 
-    public static User UserDoconvert2User(UserDo userDo){
-        if(userDo == null){
+    public static UserToken UserTokenDoconvert2UserToken(UserTokenDo userTokenDo){
+        if(userTokenDo == null){
             return null;
         }
-        User user = new User();
-        BeanUtils.copyProperties(userDo,user,"gender", "authority", "status");
-        user.setAuthority(AuthorityEnum.getEnumByCode(userDo.getAuthority()));
-        user.setGender(GenderEnum.getEnumByCode(userDo.getGender()));
-        user.setStatus(UserStatusEnum.getEnumByCode(userDo.getStatus()));
+        UserToken userToken = new UserToken();
+        BeanUtils.copyProperties(userTokenDo,userToken,"type");
+        userToken.setType(TokenTypeEnum.getEnumByCode(userTokenDo.getType()));
 
-        return user;
+        return userToken;
     }
 
-    public static UserDo Userconvert2UserDo(User user){
-        if(user == null){
+    public static UserTokenDo UserTokenconvert2UserTokenDo(UserToken userToken){
+        if(userToken == null){
             return null;
         }
-        UserDo userDo = new UserDo();
-        BeanUtils.copyProperties(user,userDo,"gender", "authority", "status");
-        userDo.setAuthority(user.getAuthority().getCode());
-        userDo.setGender(user.getGender().getCode());
-        userDo.setStatus(user.getStatus().getCode());
+        UserTokenDo userTokenDo = new UserTokenDo();
+        BeanUtils.copyProperties(userToken,userTokenDo,"type");
+        userTokenDo.setType(userToken.getType().getCode());
 
-        return userDo;
+        return userTokenDo;
     }
 }

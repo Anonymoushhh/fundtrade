@@ -8,13 +8,13 @@ import com.sdu.fund.common.result.Result;
  * @author: anonymous
  * @create: 2019-11-29 17:55
  **/
-public interface Repository<T> {
+public interface Repository<T,K> {
 
-    public T get(String primaryKey);
+    public T get(K primaryKey);
 
     public Result add(T entity);
 
     public Result update(T entity);
 
-    public Result delete(String primaryKey);
+    public Result delete(K primaryKey);
 }

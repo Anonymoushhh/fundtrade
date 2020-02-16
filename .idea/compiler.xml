@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="fundtrade-core-model" />
         <module name="fundtrade-test" />
         <module name="fundtrade-common-service-facade" />
-        <module name="fundtrade-core-model" />
-        <module name="fundtrade-common-dal" />
         <module name="fundtrade-common-util" />
+        <module name="fundtrade-common-dal" />
         <module name="fundtrade-biz-service-impl" />
         <module name="fundtrade-biz-shared" />
         <module name="fundtrade-core-service" />

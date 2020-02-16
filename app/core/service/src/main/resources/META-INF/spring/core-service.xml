@@ -26,5 +26,24 @@
     <sofa:service ref="fundDataRepository" interface="com.sdu.fund.core.repository.FundDataRepository">
         <sofa:binding.jvm/>
     </sofa:service>
+    <bean id="userRepository" class="com.sdu.fund.core.repository.UserRepositoryImpl"/>
+    <sofa:service ref="userRepository" interface="com.sdu.fund.core.repository.UserRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+    <bean id="userTokenRepository" class="com.sdu.fund.core.repository.UserTokenRepositoryImpl"/>
+    <sofa:service ref="userTokenRepository" interface="com.sdu.fund.core.repository.UserTokenRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+
+    <bean id="weChatApiService" class="com.sdu.fund.core.serviceImpl.WeChatApiServiceImpl"/>
+    <sofa:service ref="weChatApiService" interface="com.sdu.fund.core.service.WeChatApiService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean id="userCoreService" class="com.sdu.fund.core.serviceImpl.UserCoreServiceImpl"/>
+    <sofa:service ref="userCoreService" interface="com.sdu.fund.core.service.UserCoreService">
+        <sofa:binding.jvm/>
+    </sofa:service>
 
 </beans>

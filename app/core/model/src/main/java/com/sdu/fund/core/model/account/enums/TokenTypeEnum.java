@@ -9,44 +9,26 @@ import org.apache.commons.lang3.StringUtils;
  * @author: anonymous
  * @create: 2020/2/14 11:20
  **/
-public enum UserStatusEnum {
+public enum TokenTypeEnum {
 
-    CANCELLATION(0, "注销"),
-    VALID(1, "合法"),;
-    /**
-     * 响应状态码
-     */
-    private final Integer code;
+    LOGIN("LOGIN", "登录"),;
 
-    /**
-     * 响应提示
-     */
+    private final String code;
     private final String msg;
-
-    UserStatusEnum(Integer code, String msg) {
+    TokenTypeEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
-
-    public static UserStatusEnum getEnumByCode(Integer code) {
-        for(UserStatusEnum e: UserStatusEnum.values()){
-            if(Integer.valueOf(e.getCode()).equals(code)){
+    public static TokenTypeEnum getEnumByCode(String code) {
+        for(TokenTypeEnum e: TokenTypeEnum.values()){
+            if(StringUtils.equals(e.getCode(),code)){
                 return e;
             }
         }
         return null;
     }
 
-    public static PurchaseStatusEnum getEnumByMsg(String msg) {
-        for(PurchaseStatusEnum e: PurchaseStatusEnum.values()){
-            if(StringUtils.equals(msg,e.getMsg())){
-                return e;
-            }
-        }
-        return null;
-    }
-
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 

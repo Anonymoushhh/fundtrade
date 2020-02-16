@@ -1,49 +1,44 @@
 package com.sdu.fund.core.serviceImpl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.sdu.fund.common.exception.CommonException;
-import com.sdu.fund.core.model.account.bo.WeChatSessionInfo;
-import com.sdu.fund.core.model.account.constant.WeChatAppInfo;
-import com.sdu.fund.core.service.WeChatApiService;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import com.sdu.fund.common.result.Result;
+import com.sdu.fund.common.utils.SnowflakeIdUtil;
+import com.sdu.fund.core.model.account.bo.User;
+import com.sdu.fund.core.model.account.enums.AuthorityEnum;
+import com.sdu.fund.core.model.account.enums.UserStatusEnum;
+import com.sdu.fund.core.repository.UserRepository;
+import com.sdu.fund.core.service.UserCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class WeChatApiServiceImpl implements WeChatApiService {
+public class UserCoreServiceImpl implements UserCoreService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WeChatApiServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserCoreServiceImpl.class);
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
-    public WeChatSessionInfo getSessionInfo(String code){
-        try {
-            HttpClient httpClient = HttpClients.createDefault();
-            HttpGet httpGet =
-                    new HttpGet("https://api.weixin.qq.com/sns/jscode2session?appid=" + WeChatAppInfo.APP_ID +
-                            "&secret=" + WeChatAppInfo.APP_SECRET + "&js_code=" + code + "&grant_type=authorization_code");
-            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(3000)
-                    .setSocketTimeout(3000)
-                    .setConnectionRequestTimeout(3000).build();// 连接主机服务超时时间
-            httpGet.setConfig(requestConfig);
-            HttpResponse response = httpClient.execute(httpGet);
-            HttpEntity httpEntity = response.getEntity();
-            JSONObject sessionJsonObj = JSONObject.parseObject(EntityUtils.toString(httpEntity));
-            LOG.info("#WeChatApiService.getSessionInfo code:{} rlt:{}",code, sessionJsonObj.toString());
-            WeChatSessionInfo weChatSessionInfo = new WeChatSessionInfo();
-            weChatSessionInfo.setOpenId(sessionJsonObj.getString("openid"));
-            weChatSessionInfo.setSessionKey(sessionJsonObj.getString("session_key"));
-
-            return weChatSessionInfo;
-        }catch (Exception e){
-            LOG.error("#WeChatApiService.getSessionInfo ERROR",e);
-            throw new CommonException(e.getMessage());
-        }
-
+    public User login(User user) {
+        // TODO 暂未有业务逻辑
+        return user;
     }
 
+    @Override
+    public User register(User user) {
+        // 生成用户id
+        user.setUserId(SnowflakeIdUtil.getInstance().nextId());
+        // 设置用户权限级别，当前默认为普通用户
+        user.setAuthority(AuthorityEnum.CONSUMER);
+        // 设置用户状态为合法
+        user.setStatus(UserStatusEnum.VALID);
+        Result result = userRepository.add(user);
+        if(result!=null&&result.isSuccess()){
+            return user;
+        }else{
+            // 这个异常不能丢，要抛给业务层处理
+            throw new CommonException("用户注册失败");
+        }
+    }
 }

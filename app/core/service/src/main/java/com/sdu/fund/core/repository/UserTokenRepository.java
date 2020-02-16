@@ -1,6 +1,7 @@
 package com.sdu.fund.core.repository;
 
-import com.sdu.fund.core.model.trade.bo.FundManager;
+import com.sdu.fund.common.result.Result;
+import com.sdu.fund.core.model.account.bo.UserToken;
 
 /**
  * @program: fundproduct
@@ -8,5 +9,7 @@ import com.sdu.fund.core.model.trade.bo.FundManager;
  * @author: anonymous
  * @create: 2020/2/7 13:26
  **/
-public interface FundManagerRepository extends Repository<FundManager,String> {
+public interface UserTokenRepository extends Repository<UserToken,Long> {
+
+    public Result<Long> getUserIdByToken(String token);
 }

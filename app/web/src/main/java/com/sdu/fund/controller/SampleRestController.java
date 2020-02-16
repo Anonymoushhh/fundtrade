@@ -16,10 +16,6 @@
  */
 package com.sdu.fund.controller;
 
-import com.alipay.sofa.runtime.api.annotation.SofaReference;
-import com.sdu.fund.common.result.Result;
-import com.sdu.fund.biz.shared.Task.Task;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -29,28 +25,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SampleRestController {
 
-    @SofaReference(uniqueId="fundArchiveCrawlingService")
-    private DataCrawlingService fundArchiveCrawlingService;
-
-    @SofaReference(uniqueId="fundCompanyCrawlingService")
-    private DataCrawlingService fundCompanyCrawlingService;
-
-    @SofaReference(uniqueId="fundDataCrawlingService")
-    private DataCrawlingService fundDataCrawlingService;
-
-    @SofaReference(uniqueId="fundManagerCrawlingService")
-    private DataCrawlingService fundManagerCrawlingService;
-
-    @SofaReference
-    private Task dataCrawlingTask;
-
-    @RequestMapping("/test")
-    public Result test() {
-        return fundDataCrawlingService.execute();
-    }
-
-    @RequestMapping("/task")
-    public void task() {
-        dataCrawlingTask.execute();
-    }
 }

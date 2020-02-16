@@ -16,4 +16,5 @@ com\sdu\fund\common\utils\HttpUtil$2.class
 com\sdu\fund\common\utils\HttpUtil.class
 com\sdu\fund\common\utils\TokenUtil.class
 com\sdu\fund\common\exception\CommonException.class
+com\sdu\fund\common\utils\OrderIdUtil.class
 com\sdu\fund\common\utils\HttpUtil$1.class

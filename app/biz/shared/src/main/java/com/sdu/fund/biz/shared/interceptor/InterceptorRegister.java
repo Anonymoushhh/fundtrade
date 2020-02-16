@@ -1,4 +1,4 @@
-package com.sdu.fund.interceptor;
+package com.sdu.fund.biz.shared.interceptor;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class InterceptorRegister  extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(userInterceptor).
-                addPathPatterns("/order/**",
+                addPathPatterns("/tradeOrder/**",
                         "/user/**"
                         );
         super.addInterceptors(registry);

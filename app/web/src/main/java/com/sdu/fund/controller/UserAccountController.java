@@ -17,40 +17,45 @@
 package com.sdu.fund.controller;
 
 import com.alipay.sofa.runtime.api.annotation.SofaReference;
-import com.sdu.fund.common.result.Result;
-import com.sdu.fund.biz.shared.Task.Task;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.sdu.fund.biz.shared.service.UserService;
+import com.sdu.fund.biz.shared.vo.UserLoginVO;
+import com.sdu.fund.core.model.account.bo.User;
+import com.sdu.fund.core.model.account.enums.GenderEnum;
+import com.sdu.fund.biz.shared.request.WeChatLoginRequest;
+import com.sdu.fund.vo.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author qilong.zql
  * @since 2.5.8
  */
 @RestController
-public class SampleRestController {
+@RequestMapping("/fundTrade/userAccount")
+public class UserAccountController {
 
-    @SofaReference(uniqueId="fundArchiveCrawlingService")
-    private DataCrawlingService fundArchiveCrawlingService;
-
-    @SofaReference(uniqueId="fundCompanyCrawlingService")
-    private DataCrawlingService fundCompanyCrawlingService;
-
-    @SofaReference(uniqueId="fundDataCrawlingService")
-    private DataCrawlingService fundDataCrawlingService;
-
-    @SofaReference(uniqueId="fundManagerCrawlingService")
-    private DataCrawlingService fundManagerCrawlingService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);
 
     @SofaReference
-    private Task dataCrawlingTask;
+    private UserService userService;
 
-    @RequestMapping("/test")
-    public Result test() {
-        return fundDataCrawlingService.execute();
-    }
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Response<UserLoginVO> weChatLogin(@RequestBody WeChatLoginRequest weChatLoginRequest) {
+        try {
+            User user = new User();
+            user.setNickName(weChatLoginRequest.getNickName());
+            user.setGender(GenderEnum.getEnumByCode(weChatLoginRequest.getGender()));
+            user.setCity(weChatLoginRequest.getCity());
+            user.setProvince(weChatLoginRequest.getProvince());
+            user.setCountry(weChatLoginRequest.getCountry());
 
-    @RequestMapping("/task")
-    public void task() {
-        dataCrawlingTask.execute();
+            UserLoginVO userLoginVo = userService.weChatLogin(weChatLoginRequest.getCode(),user);
+            return Response.buildSuccessResponse(userLoginVo);
+        } catch (Exception e) {
+            LOGGER.error("微信登录失败，nickName={},msg={}", weChatLoginRequest.getNickName(),
+                    e.getMessage());
+            return Response.buildErrorResponse();
+        }
     }
 }

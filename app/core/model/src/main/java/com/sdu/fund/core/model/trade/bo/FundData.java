@@ -1,9 +1,9 @@
-package com.sdu.fund.core.model.bo;
+package com.sdu.fund.core.model.trade.bo;
 
-import com.sdu.fund.core.model.enums.ConfirmDayEnum;
-import com.sdu.fund.core.model.enums.FundTypeEnum;
-import com.sdu.fund.core.model.enums.PurchaseStatusEnum;
-import com.sdu.fund.core.model.enums.RedeemStatusEnum;
+import com.sdu.fund.core.model.trade.enums.ConfirmDayEnum;
+import com.sdu.fund.core.model.trade.enums.FundTypeEnum;
+import com.sdu.fund.core.model.trade.enums.PurchaseStatusEnum;
+import com.sdu.fund.core.model.trade.enums.RedeemStatusEnum;
 
 import java.util.Date;
 import java.util.List;

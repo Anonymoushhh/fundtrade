@@ -1,17 +1,14 @@
 package com.sdu.fund.core.converter;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.sdu.fund.common.dal.entity.FundDataDo;
-import com.sdu.fund.core.model.bo.FundData;
-import com.sdu.fund.core.model.bo.Rate;
-import com.sdu.fund.core.model.enums.ConfirmDayEnum;
-import com.sdu.fund.core.model.enums.FundTypeEnum;
-import com.sdu.fund.core.model.enums.PurchaseStatusEnum;
-import com.sdu.fund.core.model.enums.RedeemStatusEnum;
+import com.sdu.fund.core.model.trade.bo.FundData;
+import com.sdu.fund.core.model.trade.bo.Rate;
+import com.sdu.fund.core.model.trade.enums.ConfirmDayEnum;
+import com.sdu.fund.core.model.trade.enums.FundTypeEnum;
+import com.sdu.fund.core.model.trade.enums.PurchaseStatusEnum;
+import com.sdu.fund.core.model.trade.enums.RedeemStatusEnum;
 import org.springframework.beans.BeanUtils;
-
-import java.util.List;
 
 /**
  * @program: fundproduct

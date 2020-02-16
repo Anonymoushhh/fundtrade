@@ -1,8 +1,8 @@
-package com.sdu.fund.core.model.machine;
+package com.sdu.fund.core.model.trade.machine;
 
 import com.sdu.fund.common.exception.CommonException;
-import com.sdu.fund.core.model.enums.OrderStatusEnum;
-import com.sdu.fund.core.model.event.OrderEvent;
+import com.sdu.fund.core.model.trade.enums.TradeOrderStatusEnum;
+import com.sdu.fund.core.model.trade.event.TradeOrderEvent;
 
 /**
  * @program: fundtrade
@@ -10,7 +10,7 @@ import com.sdu.fund.core.model.event.OrderEvent;
  * @author: anonymous
  * @create: 2020/2/13 20:09
  **/
-public class PurchaseOrderStatusMachine implements OrderStatusMachine{
+public class PurchaseTradeOrderStatusMachine implements TradeOrderStatusMachine{
 
     /**
      * 订单状态机
@@ -22,42 +22,42 @@ public class PurchaseOrderStatusMachine implements OrderStatusMachine{
      *
      */
 
-    public OrderStatusEnum getNextStatus(OrderStatusEnum status, OrderEvent event) {
+    public TradeOrderStatusEnum getNextStatus(TradeOrderStatusEnum status, TradeOrderEvent event) {
         switch (status) {
             case INIT:
             case WAIT_PAY:
                 return getPaidStatus(event);
             case PAIED:
-                return OrderStatusEnum.WAIT_CONFIRM_SHARE;
+                return TradeOrderStatusEnum.WAIT_CONFIRM_SHARE;
             case WAIT_CONFIRM_SHARE:
                 return getConfirmShareStatus(event);
             case WAIT_ARRIVAL:
-                return OrderStatusEnum.FINISHED;
+                return TradeOrderStatusEnum.FINISHED;
             case WAIT_CONFIRM_ACTION:
             default:
                 throw new CommonException("没有该流程");
         }
     }
 
-    private OrderStatusEnum getPaidStatus(OrderEvent event) {
+    private TradeOrderStatusEnum getPaidStatus(TradeOrderEvent event) {
         switch (event) {
             case NO_PAY:
-                return OrderStatusEnum.WAIT_PAY;
+                return TradeOrderStatusEnum.WAIT_PAY;
             case PAY_SUCCESS:
-                return OrderStatusEnum.PAIED;
+                return TradeOrderStatusEnum.PAIED;
             case PAY_FAILURE:
-                return OrderStatusEnum.CANCEL;
+                return TradeOrderStatusEnum.CANCEL;
             default:
                 throw new CommonException("不支持该Event");
         }
     }
 
-    private OrderStatusEnum getConfirmShareStatus(OrderEvent event) {
+    private TradeOrderStatusEnum getConfirmShareStatus(TradeOrderEvent event) {
         switch (event) {
             case CONFIRM_SHARE_SUCCESS:
-                return OrderStatusEnum.WAIT_ARRIVAL;
+                return TradeOrderStatusEnum.WAIT_ARRIVAL;
             case CONFIRM_SHARE_FAILURE:
-                return OrderStatusEnum.CANCEL;
+                return TradeOrderStatusEnum.CANCEL;
             default:
                 throw new RuntimeException("不支持该Event");
         }

@@ -1,4 +1,4 @@
-package com.sdu.fund.biz.shared.service;
+package com.sdu.fund.core.service;
 
 import com.sdu.fund.core.model.account.bo.WeChatSessionInfo;
 

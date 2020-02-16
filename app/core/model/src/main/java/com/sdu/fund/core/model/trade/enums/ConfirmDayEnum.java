@@ -1,4 +1,4 @@
-package com.sdu.fund.core.model.enums;
+package com.sdu.fund.core.model.trade.enums;
 
 import org.apache.commons.lang3.StringUtils;
 

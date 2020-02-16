@@ -1,9 +1,9 @@
-package com.sdu.fund.core.model.factory;
+package com.sdu.fund.core.model.trade.factory;
 
 import com.sdu.fund.common.exception.CommonException;
-import com.sdu.fund.core.model.enums.OrderTypeEnum;
-import com.sdu.fund.core.model.machine.OrderStatusMachine;
-import com.sdu.fund.core.model.machine.PurchaseOrderStatusMachine;
+import com.sdu.fund.core.model.trade.enums.TradeOrderTypeEnum;
+import com.sdu.fund.core.model.trade.machine.TradeOrderStatusMachine;
+import com.sdu.fund.core.model.trade.machine.PurchaseTradeOrderStatusMachine;
 
 /**
  * @program: fundtrade
@@ -11,12 +11,12 @@ import com.sdu.fund.core.model.machine.PurchaseOrderStatusMachine;
  * @author: anonymous
  * @create: 2020/2/13 20:07
  **/
-public class OrderStatusMachineFactory {
+public class TradeOrderStatusMachineFactory {
 
-    public OrderStatusMachine getStatusMachine(OrderTypeEnum type) {
+    public TradeOrderStatusMachine getStatusMachine(TradeOrderTypeEnum type) {
         switch (type) {
             case PURCHASE:
-                return new PurchaseOrderStatusMachine();
+                return new PurchaseTradeOrderStatusMachine();
             case REDEEM:
             case FIXED:
             default:

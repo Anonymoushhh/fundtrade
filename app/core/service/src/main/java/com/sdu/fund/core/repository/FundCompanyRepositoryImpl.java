@@ -3,12 +3,10 @@ package com.sdu.fund.core.repository;
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundCompanyMapper;
 import com.sdu.fund.common.result.Result;
-import com.sdu.fund.common.util.ResultUtil;
+import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.FundCompanyConverter;
-import com.sdu.fund.core.model.bo.FundCompany;
-
-
+import com.sdu.fund.core.model.trade.bo.FundCompany;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

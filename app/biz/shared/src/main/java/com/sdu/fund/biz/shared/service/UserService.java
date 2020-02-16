@@ -1,7 +1,7 @@
 package com.sdu.fund.biz.shared.service;
 
-import com.sdu.fund.biz.shared.vo.UserLoginVo;
-import com.sdu.fund.core.model.account.bo.UserAccount;
+import com.sdu.fund.biz.shared.vo.UserLoginVO;
+import com.sdu.fund.core.model.account.bo.User;
 
 /**
  * @program: fundtrade
@@ -9,7 +9,7 @@ import com.sdu.fund.core.model.account.bo.UserAccount;
  * @author: anonymous
  * @create: 2020/2/14 18:11
  **/
-public interface UserAccountService {
+public interface UserService {
 
-    public UserLoginVo weChatLogin(String code, UserAccount userAccount);
+    public UserLoginVO weChatLogin(String code, User user) throws Exception;
 }

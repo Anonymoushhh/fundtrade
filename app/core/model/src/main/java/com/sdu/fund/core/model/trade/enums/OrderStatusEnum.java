@@ -1,8 +1,8 @@
-package com.sdu.fund.core.model.enums;
+package com.sdu.fund.core.model.trade.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
-public enum OrderStatusEnum {
+public enum TradeOrderStatusEnum {
 
 
     INIT("INIT", "创建订单"),
@@ -16,12 +16,12 @@ public enum OrderStatusEnum {
 
     private final String code;
     private final String msg;
-    OrderStatusEnum(String code, String msg) {
+    TradeOrderStatusEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
-    public static OrderStatusEnum getEnumByCode(String code) {
-        for(OrderStatusEnum e: OrderStatusEnum.values()){
+    public static TradeOrderStatusEnum getEnumByCode(String code) {
+        for(TradeOrderStatusEnum e: TradeOrderStatusEnum.values()){
             if(StringUtils.equals(e.getCode(),code)){
                 return e;
             }

@@ -7,29 +7,43 @@
             http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd"
        default-autowire="byName">
 
-    <bean id="fundCompanyRepository" class="com.sdu.fund.core.repository.FundCompanyRepository"/>
-    <bean id="fundArchiveRepository" class="com.sdu.fund.core.repository.FundArchiveRepository"/>
-    <bean id="fundManagerRepository" class="com.sdu.fund.core.repository.FundManagerRepository"/>
-    <bean id="fundDataRepository" class="com.sdu.fund.core.repository.FundDataRepository"/>
-
-
-    <bean class="com.sdu.fund.core.serviceImpl.FundCompanyCrawlingService" id="fundCompanyCrawlingService"/>
-    <sofa:service ref="fundCompanyCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundCompanyCrawlingService">
+    <bean id="fundCompanyRepository" class="com.sdu.fund.core.repository.FundCompanyRepositoryImpl"/>
+    <sofa:service ref="fundCompanyRepository" interface="com.sdu.fund.core.repository.FundCompanyRepository">
         <sofa:binding.jvm/>
     </sofa:service>
 
-    <bean class="com.sdu.fund.core.serviceImpl.FundDataCrawlingService" id="fundDataCrawlingService"/>
-    <sofa:service ref="fundDataCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundDataCrawlingService">
+    <bean id="fundArchiveRepository" class="com.sdu.fund.core.repository.FundArchiveRepositoryImpl"/>
+    <sofa:service ref="fundArchiveRepository" interface="com.sdu.fund.core.repository.FundArchiveRepository">
         <sofa:binding.jvm/>
     </sofa:service>
 
-    <bean class="com.sdu.fund.core.serviceImpl.FundArchiveCrawlingService" id="fundArchiveCrawlingService"/>
-    <sofa:service ref="fundArchiveCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundArchiveCrawlingService">
+    <bean id="fundManagerRepository" class="com.sdu.fund.core.repository.FundManagerRepositoryImpl"/>
+    <sofa:service ref="fundManagerRepository" interface="com.sdu.fund.core.repository.FundManagerRepository">
         <sofa:binding.jvm/>
     </sofa:service>
 
-    <bean class="com.sdu.fund.core.serviceImpl.FundManagerCrawlingService" id="fundManagerCrawlingService"/>
-    <sofa:service ref="fundManagerCrawlingService" interface="com.sdu.fund.core.service.DataCrawlingService" unique-id="fundManagerCrawlingService">
+    <bean id="fundDataRepository" class="com.sdu.fund.core.repository.FundDataRepositoryImpl"/>
+    <sofa:service ref="fundDataRepository" interface="com.sdu.fund.core.repository.FundDataRepository">
         <sofa:binding.jvm/>
     </sofa:service>
+    <bean id="userRepository" class="com.sdu.fund.core.repository.UserRepositoryImpl"/>
+    <sofa:service ref="userRepository" interface="com.sdu.fund.core.repository.UserRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+    <bean id="userTokenRepository" class="com.sdu.fund.core.repository.UserTokenRepositoryImpl"/>
+    <sofa:service ref="userTokenRepository" interface="com.sdu.fund.core.repository.UserTokenRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+
+    <bean id="weChatApiService" class="com.sdu.fund.core.serviceImpl.WeChatApiServiceImpl"/>
+    <sofa:service ref="weChatApiService" interface="com.sdu.fund.core.service.WeChatApiService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean id="userCoreService" class="com.sdu.fund.core.serviceImpl.UserCoreServiceImpl"/>
+    <sofa:service ref="userCoreService" interface="com.sdu.fund.core.service.UserCoreService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
 </beans>

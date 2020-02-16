@@ -1,7 +1,7 @@
 package com.sdu.fund.enums;
 
 /**
- * @program: fundproduct
+ * @program: fundtrade
  * @description:
  * @author: anonymous
  * @create: 2020/2/5 17:56

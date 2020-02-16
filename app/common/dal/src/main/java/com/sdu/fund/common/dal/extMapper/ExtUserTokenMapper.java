@@ -1,11 +1,10 @@
 package com.sdu.fund.common.dal.extMapper;
 
-import com.sdu.fund.common.dal.entity.UserDo;
 
-public interface ExtUserMapper {
+public interface ExtUserTokenMapper {
 
     /**
      *
      */
-    UserDo selectByOpenId(String openId);
+    Long selectUserIdByToken(String token);
 }

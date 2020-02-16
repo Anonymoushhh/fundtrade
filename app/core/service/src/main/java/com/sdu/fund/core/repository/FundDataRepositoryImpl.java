@@ -5,10 +5,11 @@ import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.entity.FundDataDo;
 import com.sdu.fund.common.dal.mapper.FundDataMapper;
 import com.sdu.fund.common.result.Result;
-import com.sdu.fund.common.util.ResultUtil;
+import com.sdu.fund.common.utils.ResultUtil;
+import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.FundDataConverter;
-import com.sdu.fund.core.model.bo.FundData;
+import com.sdu.fund.core.model.trade.bo.FundData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,28 +35,6 @@ public class FundDataRepositoryImpl implements FundDataRepository {
         return FundDataConverter.FundDataDoconvert2FundData(fundDataMapper.selectByPrimaryKey(fundCode));
     }
 
-    @Override
-    public Result<List<FundData>> getFundList(Integer fundType, String gainType, Integer curIndex,
-                                              Integer pageSize) {
-        List<FundData> fundDatas = Lists.newArrayList();
-
-        try {
-            List<FundDataDo> fundDataDos = fundDataMapper.selectFundList(fundType, gainType, curIndex, pageSize);
-            for (FundDataDo fundDataDo : fundDataDos) {
-                fundDatas.add(FundDataConverter.FundDataDoconvert2FundData(fundDataDo));
-            }
-        } catch (DataAccessException e1) {
-            LOGGER.error("基金列表查询失败，fundType={},errCode={},msg={}", fundType, ResultCode.DATABASE_EXCEPTION,
-                    e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
-        } catch (Exception e2) {
-            LOGGER.error("基金列表查询失败，fundType={},errCode={},msg={}", fundType, ResultCode.SERVER_EXCEPTION,
-                    e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
-        }
-        return ResultUtil.buildSuccessResult(fundDatas);
-
-    }
 
     @Override
     public Result add(FundData fundData) {

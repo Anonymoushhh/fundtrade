@@ -1,7 +1,7 @@
 package com.sdu.fund.core.converter;
 
 import com.sdu.fund.common.dal.entity.FundManagerDo;
-import com.sdu.fund.core.model.bo.FundManager;
+import com.sdu.fund.core.model.trade.bo.FundManager;
 import org.springframework.beans.BeanUtils;
 
 /**

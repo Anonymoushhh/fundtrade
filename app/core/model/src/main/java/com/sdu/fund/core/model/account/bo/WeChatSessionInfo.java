@@ -1,4 +1,4 @@
-package com.wycs.c.server.domain;
+package com.sdu.fund.core.model.account.bo;
 
 public class WeChatSessionInfo {
     private String openId;

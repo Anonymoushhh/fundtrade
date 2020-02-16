@@ -82,7 +82,7 @@ public final class Validator {
      *
      * @param objects the array to test
      */
-    public static void noNullElements(Object[] objects) {
+    public static void noNullElements(Object... objects) {
         noNullElements(objects, "Array must not contain any null objects");
     }
 
