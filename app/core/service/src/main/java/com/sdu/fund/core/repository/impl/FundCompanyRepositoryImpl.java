@@ -1,4 +1,4 @@
-package com.sdu.fund.core.repository;
+package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundCompanyMapper;
@@ -7,6 +7,7 @@ import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.FundCompanyConverter;
 import com.sdu.fund.core.model.trade.bo.FundCompany;
+import com.sdu.fund.core.repository.FundCompanyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,19 @@ public class FundCompanyRepositoryImpl implements FundCompanyRepository {
     private FundCompanyMapper fundCompanyMapper;
 
     @Override
-    public FundCompany get(String fundCompanyCode) {
-        return FundCompanyConverter.FundCompanyDoconvert2FundCompany(fundCompanyMapper.selectByPrimaryKey(fundCompanyCode));
+    public Result<FundCompany> get(String fundCompanyCode) {
+        Validator.notNull(fundCompanyCode);
+        try {
+            FundCompany fundCompany =
+                    FundCompanyConverter.FundCompanyDoconvert2FundCompany(fundCompanyMapper.selectByPrimaryKey(fundCompanyCode));
+            return ResultUtil.buildSuccessResult(fundCompany);
+        } catch (DataAccessException e1) {
+            LOGGER.error("基金公司信息查询失败，fundCompanyCode={},errCode={}", fundCompanyCode, ResultCode.DATABASE_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+        } catch (Exception e2) {
+            LOGGER.error("基金公司信息查询失败，fundCompanyCode={},errCode={}", fundCompanyCode, ResultCode.SERVER_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+        }
     }
 
     @Override
@@ -42,7 +54,7 @@ public class FundCompanyRepositoryImpl implements FundCompanyRepository {
         }
 
         try {
-            int id = fundCompanyMapper.insert(FundCompanyConverter.FundCompanyconvert2FundCompanyDo(fundCompany));
+            int id = fundCompanyMapper.insertSelective(FundCompanyConverter.FundCompanyconvert2FundCompanyDo(fundCompany));
             if (id > 0) {
                 return ResultUtil.buildSuccessResult();
             } else {

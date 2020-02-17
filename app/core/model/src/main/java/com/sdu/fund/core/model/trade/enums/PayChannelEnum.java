@@ -1,6 +1,5 @@
-package com.sdu.fund.core.model.account.enums;
+package com.sdu.fund.core.model.trade.enums;
 
-import com.sdu.fund.core.model.trade.enums.PurchaseStatusEnum;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -9,19 +8,19 @@ import org.apache.commons.lang3.StringUtils;
  * @author: anonymous
  * @create: 2020/2/14 11:20
  **/
-public enum TradeOrderChannelEnum {
+public enum PayChannelEnum {
 
-    WECHAT("01", "微信小程序"),
+    WALLET("01", "钱包余额"),
     TEST("00", "影子流量"),;
 
     private final String code;
     private final String msg;
-    TradeOrderChannelEnum(String code, String msg) {
+    PayChannelEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
-    public static TradeOrderChannelEnum getEnumByCode(String code) {
-        for(TradeOrderChannelEnum e: TradeOrderChannelEnum.values()){
+    public static PayChannelEnum getEnumByCode(String code) {
+        for(PayChannelEnum e: PayChannelEnum.values()){
             if(StringUtils.equals(e.getCode(),code)){
                 return e;
             }

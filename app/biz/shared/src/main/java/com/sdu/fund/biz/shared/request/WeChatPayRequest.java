@@ -1,6 +1,6 @@
 package com.sdu.fund.biz.shared.request;
 
-import com.sdu.fund.core.model.account.enums.PayChannelEnum;
+import com.sdu.fund.core.model.trade.enums.PayChannelEnum;
 
 /**
  * @program: fundtrade

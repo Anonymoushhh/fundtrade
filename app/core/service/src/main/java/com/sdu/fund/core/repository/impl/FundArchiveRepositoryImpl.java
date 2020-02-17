@@ -1,6 +1,5 @@
-package com.sdu.fund.core.repository;
+package com.sdu.fund.core.repository.impl;
 
-import com.google.common.collect.Lists;
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundArchiveMapper;
 import com.sdu.fund.common.dal.mapper.FundManagerMapper;
@@ -9,12 +8,11 @@ import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.FundArchiveConverter;
 import com.sdu.fund.core.model.trade.bo.FundArchive;
+import com.sdu.fund.core.repository.FundArchiveRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-
-import java.util.List;
 
 /**
  * @program: fundproduct
@@ -33,21 +31,21 @@ public class FundArchiveRepositoryImpl implements FundArchiveRepository {
     private FundManagerMapper fundManagerMapper;
 
     @Override
-    public FundArchive get(String fundCode) {
-        FundArchive fundArchive;
+    public Result<FundArchive> get(String fundCode) {
+        Validator.notNull(fundCode);
         try {
-            fundArchive =
+            FundArchive fundArchive =
                     FundArchiveConverter.FundArchiveDoconvert2FundArchive(fundArchiveMapper.selectByPrimaryKey(fundCode));
+            return ResultUtil.buildSuccessResult(fundArchive);
         } catch (DataAccessException e1) {
             LOGGER.error("基金档案信息查询失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return null;
+            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
         } catch (Exception e2) {
             LOGGER.error("基金档案信息查询失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return null;
+            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
         }
-        return fundArchive;
     }
 
     @Override
@@ -61,7 +59,7 @@ public class FundArchiveRepositoryImpl implements FundArchiveRepository {
         }
 
         try {
-            int id = fundArchiveMapper.insert(FundArchiveConverter.FundArchiveconvert2FundArchiveDo(fundArchive));
+            int id = fundArchiveMapper.insertSelective(FundArchiveConverter.FundArchiveconvert2FundArchiveDo(fundArchive));
             if (id > 0) {
                 return ResultUtil.buildSuccessResult();
             } else {

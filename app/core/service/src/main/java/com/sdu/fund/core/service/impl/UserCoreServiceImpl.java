@@ -1,4 +1,4 @@
-package com.sdu.fund.core.serviceImpl;
+package com.sdu.fund.core.service.impl;
 
 import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;

@@ -7,41 +7,41 @@
             http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd"
        default-autowire="byName">
 
-    <bean id="fundCompanyRepository" class="com.sdu.fund.core.repository.FundCompanyRepositoryImpl"/>
+    <bean id="fundCompanyRepository" class="com.sdu.fund.core.repository.impl.FundCompanyRepositoryImpl"/>
     <sofa:service ref="fundCompanyRepository" interface="com.sdu.fund.core.repository.FundCompanyRepository">
         <sofa:binding.jvm/>
     </sofa:service>
 
-    <bean id="fundArchiveRepository" class="com.sdu.fund.core.repository.FundArchiveRepositoryImpl"/>
+    <bean id="fundArchiveRepository" class="com.sdu.fund.core.repository.impl.FundArchiveRepositoryImpl"/>
     <sofa:service ref="fundArchiveRepository" interface="com.sdu.fund.core.repository.FundArchiveRepository">
         <sofa:binding.jvm/>
     </sofa:service>
 
-    <bean id="fundManagerRepository" class="com.sdu.fund.core.repository.FundManagerRepositoryImpl"/>
+    <bean id="fundManagerRepository" class="com.sdu.fund.core.repository.impl.FundManagerRepositoryImpl"/>
     <sofa:service ref="fundManagerRepository" interface="com.sdu.fund.core.repository.FundManagerRepository">
         <sofa:binding.jvm/>
     </sofa:service>
 
-    <bean id="fundDataRepository" class="com.sdu.fund.core.repository.FundDataRepositoryImpl"/>
+    <bean id="fundDataRepository" class="com.sdu.fund.core.repository.impl.FundDataRepositoryImpl"/>
     <sofa:service ref="fundDataRepository" interface="com.sdu.fund.core.repository.FundDataRepository">
         <sofa:binding.jvm/>
     </sofa:service>
-    <bean id="userRepository" class="com.sdu.fund.core.repository.UserRepositoryImpl"/>
+    <bean id="userRepository" class="com.sdu.fund.core.repository.impl.UserRepositoryImpl"/>
     <sofa:service ref="userRepository" interface="com.sdu.fund.core.repository.UserRepository">
         <sofa:binding.jvm/>
     </sofa:service>
-    <bean id="userTokenRepository" class="com.sdu.fund.core.repository.UserTokenRepositoryImpl"/>
+    <bean id="userTokenRepository" class="com.sdu.fund.core.repository.impl.UserTokenRepositoryImpl"/>
     <sofa:service ref="userTokenRepository" interface="com.sdu.fund.core.repository.UserTokenRepository">
         <sofa:binding.jvm/>
     </sofa:service>
 
 
-    <bean id="weChatApiService" class="com.sdu.fund.core.serviceImpl.WeChatApiServiceImpl"/>
+    <bean id="weChatApiService" class="com.sdu.fund.core.service.impl.WeChatApiServiceImpl"/>
     <sofa:service ref="weChatApiService" interface="com.sdu.fund.core.service.WeChatApiService">
         <sofa:binding.jvm/>
     </sofa:service>
 
-    <bean id="userCoreService" class="com.sdu.fund.core.serviceImpl.UserCoreServiceImpl"/>
+    <bean id="userCoreService" class="com.sdu.fund.core.service.impl.UserCoreServiceImpl"/>
     <sofa:service ref="userCoreService" interface="com.sdu.fund.core.service.UserCoreService">
         <sofa:binding.jvm/>
     </sofa:service>

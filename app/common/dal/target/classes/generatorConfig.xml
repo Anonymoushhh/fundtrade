@@ -96,7 +96,7 @@
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>
         </table>
-        <table tableName="trade_flow" domainObjectName="TradeFlowDo" mapperName="TradeFlowMapper"
+        <table tableName="trade_order_flow" domainObjectName="TradeOrderFlowDo" mapperName="TradeOrderFlowMapper"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>

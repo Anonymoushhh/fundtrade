@@ -1,26 +1,21 @@
-package com.sdu.fund.core.model.account.enums;
+package com.sdu.fund.core.model.trade.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * @program: fundtrade
- * @description:
- * @author: anonymous
- * @create: 2020/2/14 11:20
- **/
-public enum PayChannelEnum {
+public enum FlowInitiatorEnum {
 
-    WALLET("01", "钱包余额"),
-    TEST("00", "影子流量"),;
+
+    USER("USER", "用户"),
+    SYSTEM("SYSTEM", "系统"),;
 
     private final String code;
     private final String msg;
-    PayChannelEnum(String code, String msg) {
+    FlowInitiatorEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
-    public static PayChannelEnum getEnumByCode(String code) {
-        for(PayChannelEnum e: PayChannelEnum.values()){
+    public static FlowInitiatorEnum getEnumByCode(String code) {
+        for(FlowInitiatorEnum e: FlowInitiatorEnum.values()){
             if(StringUtils.equals(e.getCode(),code)){
                 return e;
             }

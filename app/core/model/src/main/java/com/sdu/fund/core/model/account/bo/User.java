@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import com.sdu.fund.core.model.account.enums.AuthorityEnum;
 import com.sdu.fund.core.model.account.enums.GenderEnum;
 import com.sdu.fund.core.model.account.enums.UserStatusEnum;
+import com.sdu.fund.core.model.trade.enums.UserTypeEnum;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -55,6 +56,11 @@ public class User {
      *
      */
     private AuthorityEnum authority;
+
+    /**
+     *
+     */
+    private UserTypeEnum type;
 
     /**
      *
@@ -139,37 +145,37 @@ public class User {
 
 
     public static void main(String[] args) throws Exception {
-        User user = new User();
-        user.setUserId(1l);
-        user.setNickName("1");
-        user.setOpenId("1");
-        user.setGender(GenderEnum.FEMALE);
-        user.setCity("1");
-        user.setProvince(null);
-        user.setCountry("1");
-        user.setAuthority(AuthorityEnum.CONSUMER);
-        user.setStatus(UserStatusEnum.VALID);
-        Map map1 = Maps.newHashMap();
-        map1.put("2", "1");
-        map1.put("1", "1");
-        user.setExtInfo(map1);
-
-        User other = new User();
-        other.setUserId(1l);
-        other.setNickName(null);
-        other.setOpenId("1");
-        other.setGender(GenderEnum.FEMALE);
-        other.setCity("1");
-        other.setProvince("1");
-        other.setCountry("1");
-        other.setAuthority(AuthorityEnum.CONSUMER);
-        other.setStatus(UserStatusEnum.VALID);
-        Map map = Maps.newHashMap();
-        map.put("1", "1");
-        map1.put("2", "1");
-        other.setExtInfo(map);
-
-        System.out.println(user.equals(other, "userId", "gender", "nickName"));
+//        User user = new User();
+//        user.setUserId(1l);
+//        user.setNickName("1");
+//        user.setOpenId("1");
+//        user.setGender(GenderEnum.FEMALE);
+//        user.setCity("1");
+//        user.setProvince(null);
+//        user.setCountry("1");
+//        user.setAuthority(AuthorityEnum.CONSUMER);
+//        user.setStatus(UserStatusEnum.VALID);
+//        Map map1 = Maps.newHashMap();
+//        map1.put("2", "1");
+//        map1.put("1", "1");
+//        user.setExtInfo(map1);
+//
+//        User other = new User();
+//        other.setUserId(1l);
+//        other.setNickName(null);
+//        other.setOpenId("1");
+//        other.setGender(GenderEnum.FEMALE);
+//        other.setCity("1");
+//        other.setProvince("1");
+//        other.setCountry("1");
+//        other.setAuthority(AuthorityEnum.CONSUMER);
+//        other.setStatus(UserStatusEnum.VALID);
+//        Map map = Maps.newHashMap();
+//        map.put("1", "1");
+//        map1.put("2", "1");
+//        other.setExtInfo(map);
+//
+//        System.out.println(user.equals(other, "userId", "gender", "nickName"));
 
     }
 
@@ -181,12 +187,12 @@ public class User {
         this.userId = userId;
     }
 
-    public Map<String, Object> getExtInfo() {
-        return extInfo;
+    public UserTypeEnum getType() {
+        return type;
     }
 
-    public void setExtInfo(Map<String, Object> extInfo) {
-        this.extInfo = extInfo;
+    public void setType(UserTypeEnum type) {
+        this.type = type;
     }
 
     public String getOpenId() {

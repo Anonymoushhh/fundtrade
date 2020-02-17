@@ -1,4 +1,4 @@
-package com.sdu.fund.core.repository;
+package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.TradeOrderMapper;
@@ -7,6 +7,7 @@ import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.TradeOrderConverter;
 import com.sdu.fund.core.model.trade.bo.TradeOrder;
+import com.sdu.fund.core.repository.TradeOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,19 @@ public class TradeOrderRepositoryImpl implements TradeOrderRepository {
 
 
     @Override
-    public TradeOrder get(String tradeOrderId) {
+    public Result<TradeOrder> get(String tradeOrderId) {
         Validator.notNull(tradeOrderId);
-        return TradeOrderConverter.TradeOrderDoconvert2TradeOrder(tradeOrderMapper.selectByPrimaryKey(tradeOrderId));
+        try {
+            TradeOrder tradeOrder =
+                    TradeOrderConverter.TradeOrderDoconvert2TradeOrder(tradeOrderMapper.selectByPrimaryKey(tradeOrderId));
+            return ResultUtil.buildSuccessResult(tradeOrder);
+        } catch (DataAccessException e1) {
+            LOGGER.error("订单查询失败，tradeOrderId={},errCode={}", tradeOrderId, ResultCode.DATABASE_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+        } catch (Exception e2) {
+            LOGGER.error("订单查询失败，tradeOrderId={},errCode={}", tradeOrderId, ResultCode.SERVER_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+        }
     }
 
     @Override
@@ -44,7 +55,7 @@ public class TradeOrderRepositoryImpl implements TradeOrderRepository {
         }
 
         try {
-            int id = tradeOrderMapper.insert(TradeOrderConverter.TradeOrderconvert2TradeOrderDo(tradeOrder));
+            int id = tradeOrderMapper.insertSelective(TradeOrderConverter.TradeOrderconvert2TradeOrderDo(tradeOrder));
             if (id > 0) {
                 return ResultUtil.buildSuccessResult();
             } else {

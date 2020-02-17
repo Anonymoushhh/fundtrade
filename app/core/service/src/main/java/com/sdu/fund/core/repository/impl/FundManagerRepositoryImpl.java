@@ -1,4 +1,4 @@
-package com.sdu.fund.core.repository;
+package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundManagerMapper;
@@ -7,6 +7,7 @@ import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.FundManagerConverter;
 import com.sdu.fund.core.model.trade.bo.FundManager;
+import com.sdu.fund.core.repository.FundManagerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,19 @@ public class FundManagerRepositoryImpl implements FundManagerRepository {
     private FundManagerMapper fundManagerMapper;
 
     @Override
-    public FundManager get(String managerId) {
-        return FundManagerConverter.FundManagerDoconvert2FundManager(fundManagerMapper.selectByPrimaryKey(managerId));
+    public Result<FundManager> get(String managerId) {
+        Validator.notNull(managerId);
+        try {
+            FundManager fundManager =
+                    FundManagerConverter.FundManagerDoconvert2FundManager(fundManagerMapper.selectByPrimaryKey(managerId));
+            return ResultUtil.buildSuccessResult(fundManager);
+        } catch (DataAccessException e1) {
+            LOGGER.error("基金经理信息查询失败，managerId={},errCode={}", managerId, ResultCode.DATABASE_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+        } catch (Exception e2) {
+            LOGGER.error("基金经理信息查询失败，managerId={},errCode={}", managerId, ResultCode.SERVER_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+        }
     }
 
     @Override
@@ -42,7 +54,7 @@ public class FundManagerRepositoryImpl implements FundManagerRepository {
         }
 
         try {
-            int id = fundManagerMapper.insert(FundManagerConverter.FundManagerconvert2FundManagerDo(fundManager));
+            int id = fundManagerMapper.insertSelective(FundManagerConverter.FundManagerconvert2FundManagerDo(fundManager));
             if (id > 0) {
                 return ResultUtil.buildSuccessResult();
             } else {

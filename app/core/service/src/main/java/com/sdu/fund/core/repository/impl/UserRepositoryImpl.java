@@ -1,4 +1,4 @@
-package com.sdu.fund.core.repository;
+package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.extMapper.ExtUserMapper;
@@ -8,6 +8,7 @@ import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.UserConverter;
 import com.sdu.fund.core.model.account.bo.User;
+import com.sdu.fund.core.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,18 @@ public class UserRepositoryImpl implements UserRepository {
     private ExtUserMapper extUserMapper;
 
     @Override
-    public User get(Long userId) {
+    public Result<User> get(Long userId) {
         Validator.notNull(userId);
-        return UserConverter.UserDoconvert2User(userMapper.selectByPrimaryKey(userId));
+        try {
+            User user = UserConverter.UserDoconvert2User(userMapper.selectByPrimaryKey(userId));
+            return ResultUtil.buildSuccessResult(user);
+        } catch (DataAccessException e1) {
+            LOGGER.error("用户查询失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+        } catch (Exception e2) {
+            LOGGER.error("用户查询失败，userId={},errCode={}", userId, ResultCode.SERVER_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+        }
     }
 
     @Override
@@ -42,26 +52,26 @@ public class UserRepositoryImpl implements UserRepository {
         boolean check = preCheck(user);
         if (!check) {
             LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
-                ResultCode.PARAMETER_ILLEGAL);
+                    ResultCode.PARAMETER_ILLEGAL);
             return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
         }
 
         try {
-            int id = userMapper.insert(UserConverter.Userconvert2UserDo(user));
+            int id = userMapper.insertSelective(UserConverter.Userconvert2UserDo(user));
             if (id > 0) {
                 return ResultUtil.buildSuccessResult();
             } else {
                 LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
-                    ResultCode.DATABASE_EXCEPTION);
+                        ResultCode.DATABASE_EXCEPTION);
                 return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
-                ResultCode.DATABASE_EXCEPTION);
+                    ResultCode.DATABASE_EXCEPTION);
             return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
         } catch (Exception e2) {
             LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
-                ResultCode.SERVER_EXCEPTION);
+                    ResultCode.SERVER_EXCEPTION);
             return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
         }
     }
@@ -72,27 +82,27 @@ public class UserRepositoryImpl implements UserRepository {
         boolean check = preCheck(user);
         if (!check) {
             LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
-                ResultCode.PARAMETER_ILLEGAL);
+                    ResultCode.PARAMETER_ILLEGAL);
             return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
         }
 
         try {
             int count =
-                userMapper.updateByPrimaryKeySelective(UserConverter.Userconvert2UserDo(user));
+                    userMapper.updateByPrimaryKeySelective(UserConverter.Userconvert2UserDo(user));
             if (count > 0) {
                 return ResultUtil.buildSuccessResult();
             } else {
                 LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
-                    ResultCode.DATABASE_EXCEPTION);
+                        ResultCode.DATABASE_EXCEPTION);
                 return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
-                ResultCode.DATABASE_EXCEPTION);
+                    ResultCode.DATABASE_EXCEPTION);
             return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
         } catch (Exception e2) {
             LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
-                ResultCode.SERVER_EXCEPTION);
+                    ResultCode.SERVER_EXCEPTION);
             return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
         }
     }
@@ -105,16 +115,16 @@ public class UserRepositoryImpl implements UserRepository {
                 return ResultUtil.buildSuccessResult();
             } else {
                 LOGGER.error("用户信息删除失败，userId={},errCode={}", userId,
-                    ResultCode.DATABASE_EXCEPTION);
+                        ResultCode.DATABASE_EXCEPTION);
                 return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户信息删除失败，userId={},errCode={}", userId,
-                ResultCode.DATABASE_EXCEPTION);
+                    ResultCode.DATABASE_EXCEPTION);
             return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
         } catch (Exception e2) {
             LOGGER.error("用户信息删除失败，userId={},errCode={}", userId,
-                ResultCode.SERVER_EXCEPTION);
+                    ResultCode.SERVER_EXCEPTION);
             return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
         }
     }
@@ -132,10 +142,15 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Result<User> getByOpenId(String openId) {
-        User user = UserConverter.UserDoconvert2User(extUserMapper.selectByOpenId(openId));
-        if(user == null){
-            ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+        try {
+            User user = UserConverter.UserDoconvert2User(extUserMapper.selectByOpenId(openId));
+            return ResultUtil.buildSuccessResult(user);
+        } catch (DataAccessException e1) {
+            LOGGER.error("用户信息查询失败，openId={},errCode={}", openId, ResultCode.DATABASE_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+        } catch (Exception e2) {
+            LOGGER.error("用户信息查询失败，openId={},errCode={}", openId, ResultCode.SERVER_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
         }
-        return ResultUtil.buildSuccessResult(user);
     }
 }

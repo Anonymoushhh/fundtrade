@@ -5,6 +5,7 @@ import com.sdu.fund.core.model.account.bo.User;
 import com.sdu.fund.core.model.account.enums.AuthorityEnum;
 import com.sdu.fund.core.model.account.enums.GenderEnum;
 import com.sdu.fund.core.model.account.enums.UserStatusEnum;
+import com.sdu.fund.core.model.trade.enums.UserTypeEnum;
 import org.springframework.beans.BeanUtils;
 
 /**
@@ -20,10 +21,11 @@ public class UserConverter {
             return null;
         }
         User user = new User();
-        BeanUtils.copyProperties(userDo,user,"gender", "authority", "status");
+        BeanUtils.copyProperties(userDo,user,"gender", "authority", "type", "status");
         user.setAuthority(AuthorityEnum.getEnumByCode(userDo.getAuthority()));
         user.setGender(GenderEnum.getEnumByCode(userDo.getGender()));
         user.setStatus(UserStatusEnum.getEnumByCode(userDo.getStatus()));
+//        user.setType(UserTypeEnum.getEnumByCode(userDo));
 
         return user;
     }

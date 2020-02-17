@@ -10,7 +10,7 @@ import com.sdu.fund.common.result.Result;
  **/
 public interface Repository<T,K> {
 
-    public T get(K primaryKey);
+    public Result<T> get(K primaryKey);
 
     public Result add(T entity);
 

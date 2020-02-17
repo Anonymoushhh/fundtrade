@@ -2,8 +2,8 @@ package com.sdu.fund.core.model.trade.bo;
 
 import com.sdu.fund.common.utils.DateUtil;
 import com.sdu.fund.common.utils.TradeOrderIdUtil;
-import com.sdu.fund.core.model.account.enums.TradeOrderChannelEnum;
-import com.sdu.fund.core.model.account.enums.PayChannelEnum;
+import com.sdu.fund.core.model.trade.enums.TradeOrderChannelEnum;
+import com.sdu.fund.core.model.trade.enums.PayChannelEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderStatusEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderTypeEnum;
 import com.sdu.fund.core.model.trade.event.TradeOrderEvent;

@@ -22,6 +22,7 @@ public class PurchaseTradeOrderStatusMachine implements TradeOrderStatusMachine{
      *
      */
 
+    @Override
     public TradeOrderStatusEnum getNextStatus(TradeOrderStatusEnum status, TradeOrderEvent event) {
         switch (status) {
             case INIT:
