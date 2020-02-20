@@ -1,8 +1,12 @@
 package com.sdu.fund.common.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.sdu.fund.common.enums.RequestMethodEnum;
 import com.sdu.fund.common.exception.CommonException;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -15,32 +19,51 @@ import java.util.Date;
 
 public class DateUtil {
 
-    /** 时间格式化：yyyy-MM-dd HH:mm:ss */
+    /**
+     * 时间格式化：yyyy-MM-dd HH:mm:ss
+     */
     public static SimpleDateFormat FMT_YMDHMS1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    /** 时间格式化：yyyyMMddHHmmss */
+    /**
+     * 时间格式化：yyyyMMddHHmmss
+     */
     public static SimpleDateFormat FMT_YMDHMS2 = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    /** 时间格式化：yyyy-MM-dd */
+    /**
+     * 时间格式化：yyyy-MM-dd
+     */
     public static SimpleDateFormat FMT_YMD1 = new SimpleDateFormat("yyyy-MM-dd");
 
-    /** 时间格式化：MM/dd/yyyy HH:mm:ss */
+    /**
+     * 时间格式化：MM/dd/yyyy HH:mm:ss
+     */
     public static SimpleDateFormat FMT_MDYHMS = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
-    /** 时间格式化：MM/dd/yyyy */
+    /**
+     * 时间格式化：MM/dd/yyyy
+     */
     public static SimpleDateFormat FMT_MDY = new SimpleDateFormat("MM/dd/yyyy");
 
-    /** 时间格式化：yyyy/MM/dd */
+    /**
+     * 时间格式化：yyyy/MM/dd
+     */
     public static SimpleDateFormat FMT_YMD2 = new SimpleDateFormat("yyyy/MM/dd");
 
-    /** 时间格式化：yyyy年MM月dd日 */
+    /**
+     * 时间格式化：yyyyMMdd
+     */
+    public static SimpleDateFormat FMT_YMD4 = new SimpleDateFormat("yyyyMMdd");
+
+    /**
+     * 时间格式化：yyyy年MM月dd日
+     */
     public static SimpleDateFormat FMT_YMD3 = new SimpleDateFormat("yyyy年MM月dd日");
 
     /**
      * 将当前时间转成yyyyMMddHHmmssSSS格式
      */
-    public synchronized  static String getMilli() {
-        SimpleDateFormat  sdf= new SimpleDateFormat("yyyyMMddHHmmssSSS");
+    public synchronized static String getMilli() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         Date date = new Date();
         try {
             Thread.sleep(1);
@@ -78,12 +101,12 @@ public class DateUtil {
     }
 
 
-
 //----------------------------------------指定时间处理
+
     /**
      * 将指定时间转成指定格式字符串
      */
-    public static String getTimeDayByString(Date date,SimpleDateFormat sdf) {
+    public static String getTimeDayByString(Date date, SimpleDateFormat sdf) {
         return sdf.format(date);
     }
 
@@ -99,6 +122,36 @@ public class DateUtil {
         cal.set(Calendar.SECOND, 0);
         Date nextDate = cal.getTime();
         return nextDate;
+    }
+
+    /**
+     * 获取下x天日期
+     */
+    public static Date getNextXDay(int x) {
+        Date date = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, x);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取下一个交易日
+     */
+    public static Date getNextTransDate() throws Exception {
+        for (int i = 1; i < 100; i++) {
+            String day = dateToStr(getNextXDay(i), FMT_YMD4);
+            String url = "http://www.easybots.cn/api/holiday.php?d=" + day;
+            JSONObject res = JSON.parseObject(HttpUtil.send(url, RequestMethodEnum.GET));
+            System.out.println(res);
+
+            if ("0".equals(res.getString(day))) {
+                return strToDate(day, FMT_YMD4);
+            } else {
+                continue;
+            }
+        }
+        return null;
     }
 
 
@@ -118,30 +171,32 @@ public class DateUtil {
 
     /**
      * 时间字符串转时间
+     *
      * @param str
      * @return
      */
-    public static Date strToDate(String str,SimpleDateFormat format) {
+    public static Date strToDate(String str, SimpleDateFormat format) {
         Date date = null;
         try {
             date = format.parse(str);
         } catch (Exception e) {
-            throw new CommonException("strToDate转换失败,msg="+e.getMessage());
+            throw new CommonException("strToDate转换失败,msg=" + e.getMessage());
         }
         return date;
     }
 
     /**
      * 时间转字符串
+     *
      * @param Date date,SimpleDateFormat sdf
      * @return
      */
-    public static String dateToStr(Date date,SimpleDateFormat sdf) {
+    public static String dateToStr(Date date, SimpleDateFormat sdf) {
         String dateStr = null;
         try {
             dateStr = sdf.format(date);
         } catch (Exception e) {
-            throw new CommonException("dateToStr转换失败,msg="+e.getMessage());
+            throw new CommonException("dateToStr转换失败,msg=" + e.getMessage());
         }
         return dateStr;
     }
@@ -149,11 +204,11 @@ public class DateUtil {
 
     /**
      * 传入时间减x天
-     * */
-    public static Date getStringBeforeDays(Date datestr,int x){
+     */
+    public static Date getStringBeforeDays(Date datestr, int x) {
         Calendar calendar = Calendar.getInstance(); //得到日历
         calendar.setTime(datestr);
-        calendar.add(Calendar.DAY_OF_MONTH, -1*x);
+        calendar.add(Calendar.DAY_OF_MONTH, -1 * x);
 
         Date date = calendar.getTime();
         return date;
@@ -161,11 +216,11 @@ public class DateUtil {
 
     /**
      * 传入时间减x年
-     * */
-    public static Date getStringBeforeYears(Date datestr,int x) {
+     */
+    public static Date getStringBeforeYears(Date datestr, int x) {
         Calendar calendar = Calendar.getInstance(); //得到日历
         calendar.setTime(datestr);
-        calendar.add(Calendar.YEAR, -1*x);
+        calendar.add(Calendar.YEAR, -1 * x);
 
         Date date = calendar.getTime();
         return date;
@@ -188,18 +243,19 @@ public class DateUtil {
         return new Date(unixTime);
     }
 
-    public static boolean sameDateTime(Date date1,Date date2){
-        if(date1==null||date2==null){
+    public static boolean sameDateTime(Date date1, Date date2) {
+        if (date1 == null || date2 == null) {
             return false;
         }
         return date1.compareTo(date2) == 0;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         Date date1 = new Date();
 
         boolean b = sameDateTime(date1, DateUtil.strToDate("2019/12/05 6:58:27", DateUtil.FMT_MDYHMS));
         System.out.println(unixToDate(System.currentTimeMillis()));
+        System.out.println(getNextTransDate());
     }
- }
+}
 

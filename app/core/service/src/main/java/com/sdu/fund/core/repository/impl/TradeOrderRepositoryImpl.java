@@ -1,6 +1,7 @@
 package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
+import com.sdu.fund.common.dal.extMapper.ExtTradeOrderMapper;
 import com.sdu.fund.common.dal.mapper.TradeOrderMapper;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
@@ -27,6 +28,8 @@ public class TradeOrderRepositoryImpl implements TradeOrderRepository {
     @Autowired
     private TradeOrderMapper tradeOrderMapper;
 
+    @Autowired
+    private ExtTradeOrderMapper extTradeOrderMapper;
 
     @Override
     public Result<TradeOrder> get(String tradeOrderId) {
@@ -137,5 +140,9 @@ public class TradeOrderRepositoryImpl implements TradeOrderRepository {
     private boolean preCheck(TradeOrder tradeOrder) {
         return Validator.notNull(tradeOrder) && Validator.notNull(tradeOrder.getTradeOrderId());
     }
-    
+
+    @Override
+    public TradeOrder lock(String orderId) {
+        return TradeOrderConverter.TradeOrderDoconvert2TradeOrder(extTradeOrderMapper.lockByPrimaryKey(orderId));
+    }
 }

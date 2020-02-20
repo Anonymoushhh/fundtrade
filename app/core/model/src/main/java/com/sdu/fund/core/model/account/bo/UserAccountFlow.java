@@ -1,5 +1,8 @@
 package com.sdu.fund.core.model.account.bo;
 
+import com.sdu.fund.common.exception.CommonException;
+import com.sdu.fund.common.utils.SnowflakeIdUtil;
+import com.sdu.fund.core.model.trade.bo.Payment;
 import com.sdu.fund.core.model.trade.enums.FlowInitiatorEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderFlowTypeEnum;
 import com.sdu.fund.core.model.trade.enums.UserAccountChangeDirectionEnum;
@@ -16,7 +19,7 @@ import java.util.Date;
  **/
 public class UserAccountFlow {
 
-    private String flowId;
+    private Long flowId;
 
     /**
      *
@@ -79,6 +82,11 @@ public class UserAccountFlow {
     private BigDecimal postFreezeAmount;
 
     /**
+     * 是否合法
+     */
+    private Boolean valid;
+
+    /**
      *
      */
     private Date gmtCreate;
@@ -88,11 +96,53 @@ public class UserAccountFlow {
      */
     private Date gmtModified;
 
-    public String getFlowId() {
+    /**
+     * 创建流水
+     */
+    public static UserAccountFlow createFlow(Payment payment, Long relatedFlowId,
+                                             UserAccountChangeDirectionEnum changeDirection,
+                                             UserAccountFlowTypeEnum type, FlowInitiatorEnum initiator,
+                                             BigDecimal preTotolAmount, BigDecimal preAvailAmount,
+                                             BigDecimal preFreezeAmount, BigDecimal freezeAmount) {
+        UserAccountFlow userAccountFlow = new UserAccountFlow();
+        userAccountFlow.setFlowId(SnowflakeIdUtil.getInstance().nextId());
+        userAccountFlow.setRelatedOrderId(payment.getOrderId());
+        userAccountFlow.setRelatedFlowId(String.valueOf(relatedFlowId));
+        userAccountFlow.setChangeDirection(changeDirection);
+        userAccountFlow.setType(type);
+        userAccountFlow.setInitiator(initiator);
+        userAccountFlow.setPreTotolAmount(preTotolAmount);
+        userAccountFlow.setPreAvailAmount(preAvailAmount);
+        userAccountFlow.setPreFreezeAmount(preFreezeAmount);
+        /**
+         * 入账：总金额 += 订单总额
+         *      可用金额 += 订单总额-订单冻结金额
+         *      冻结金额 += 订单冻结金额
+         */
+        if (changeDirection == UserAccountChangeDirectionEnum.IN) {
+            userAccountFlow.setPostTotolAmount(preTotolAmount.add(payment.getOrderAmount()));
+            userAccountFlow.setPostAvailAmount(preAvailAmount.add(payment.getOrderAmount().subtract(freezeAmount)));
+            userAccountFlow.setPostFreezeAmount(preFreezeAmount.add(freezeAmount));
+        } else if (changeDirection == UserAccountChangeDirectionEnum.OUT) {
+            /**
+             * 出账：总金额 -= 订单总额
+             *      可用金额 -= 订单总额
+             *      冻结金额不变
+             */
+            userAccountFlow.setPostTotolAmount(preTotolAmount.subtract(payment.getOrderAmount()));
+            userAccountFlow.setPostAvailAmount(preAvailAmount.subtract(payment.getOrderAmount()));
+            userAccountFlow.setPostFreezeAmount(preFreezeAmount);
+        } else {
+            throw new CommonException("不支持的账务方向");
+        }
+        return userAccountFlow;
+    }
+
+    public Long getFlowId() {
         return flowId;
     }
 
-    public void setFlowId(String flowId) {
+    public void setFlowId(Long flowId) {
         this.flowId = flowId;
     }
 
@@ -102,6 +152,14 @@ public class UserAccountFlow {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     public String getRelatedOrderId() {

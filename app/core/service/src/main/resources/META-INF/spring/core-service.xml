@@ -7,21 +7,19 @@
             http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd"
        default-autowire="byName">
 
+    <!--  仓储类  -->
     <bean id="fundCompanyRepository" class="com.sdu.fund.core.repository.impl.FundCompanyRepositoryImpl"/>
     <sofa:service ref="fundCompanyRepository" interface="com.sdu.fund.core.repository.FundCompanyRepository">
         <sofa:binding.jvm/>
     </sofa:service>
-
     <bean id="fundArchiveRepository" class="com.sdu.fund.core.repository.impl.FundArchiveRepositoryImpl"/>
     <sofa:service ref="fundArchiveRepository" interface="com.sdu.fund.core.repository.FundArchiveRepository">
         <sofa:binding.jvm/>
     </sofa:service>
-
     <bean id="fundManagerRepository" class="com.sdu.fund.core.repository.impl.FundManagerRepositoryImpl"/>
     <sofa:service ref="fundManagerRepository" interface="com.sdu.fund.core.repository.FundManagerRepository">
         <sofa:binding.jvm/>
     </sofa:service>
-
     <bean id="fundDataRepository" class="com.sdu.fund.core.repository.impl.FundDataRepositoryImpl"/>
     <sofa:service ref="fundDataRepository" interface="com.sdu.fund.core.repository.FundDataRepository">
         <sofa:binding.jvm/>
@@ -30,20 +28,48 @@
     <sofa:service ref="userRepository" interface="com.sdu.fund.core.repository.UserRepository">
         <sofa:binding.jvm/>
     </sofa:service>
+    <bean id="userAccountRepository" class="com.sdu.fund.core.repository.impl.UserAccountRepositoryImpl"/>
+    <sofa:service ref="userAccountRepository" interface="com.sdu.fund.core.repository.UserAccountRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
     <bean id="userTokenRepository" class="com.sdu.fund.core.repository.impl.UserTokenRepositoryImpl"/>
     <sofa:service ref="userTokenRepository" interface="com.sdu.fund.core.repository.UserTokenRepository">
         <sofa:binding.jvm/>
     </sofa:service>
+    <bean id="tradeOrderRepository" class="com.sdu.fund.core.repository.impl.TradeOrderRepositoryImpl"/>
+    <sofa:service ref="tradeOrderRepository" interface="com.sdu.fund.core.repository.TradeOrderRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+    <bean id="tradeOrderFlowRepository" class="com.sdu.fund.core.repository.impl.TradeOrderFlowRepositoryImpl"/>
+    <sofa:service ref="tradeOrderFlowRepository" interface="com.sdu.fund.core.repository.TradeOrderFlowRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
+    <bean id="paymentRepository" class="com.sdu.fund.core.repository.impl.PaymentRepositoryImpl"/>
+    <sofa:service ref="paymentRepository" interface="com.sdu.fund.core.repository.PaymentRepository">
+        <sofa:binding.jvm/>
+    </sofa:service>
 
-
+    <!--  通用微服务  -->
     <bean id="weChatApiService" class="com.sdu.fund.core.service.impl.WeChatApiServiceImpl"/>
     <sofa:service ref="weChatApiService" interface="com.sdu.fund.core.service.WeChatApiService">
         <sofa:binding.jvm/>
     </sofa:service>
-
     <bean id="userCoreService" class="com.sdu.fund.core.service.impl.UserCoreServiceImpl"/>
     <sofa:service ref="userCoreService" interface="com.sdu.fund.core.service.UserCoreService">
         <sofa:binding.jvm/>
     </sofa:service>
+    <bean id="purchaseCoreService" class="com.sdu.fund.core.service.impl.PurchaseCoreServiceImpl"/>
+    <sofa:service ref="purchaseCoreService" interface="com.sdu.fund.core.service.PurchaseCoreService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="transactionTemplate"
+          class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager"/>
+    </bean>
 
 </beans>

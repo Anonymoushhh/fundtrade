@@ -10,4 +10,8 @@
     <sofa:service ref="userService" interface="com.sdu.fund.biz.shared.service.UserService">
         <sofa:binding.jvm/>
     </sofa:service>
+    <bean id="purchaseService" class="com.sdu.fund.biz.shared.serviceImpl.PurchaseServiceImpl"/>
+    <sofa:service ref="purchaseService" interface="com.sdu.fund.biz.shared.service.PurchaseService">
+        <sofa:binding.jvm/>
+    </sofa:service>
 </beans>

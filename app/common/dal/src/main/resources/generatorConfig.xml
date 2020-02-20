@@ -86,7 +86,7 @@
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>
         </table>
-        <table tableName="trade_Order" domainObjectName="TradeOrderDo" mapperName="TradeOrderMapper"
+        <table tableName="trade_order" domainObjectName="TradeOrderDo" mapperName="TradeOrderMapper"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>

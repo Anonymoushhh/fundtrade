@@ -1,6 +1,10 @@
 package com.sdu.fund.biz.shared.vo;
 
 
+import com.sdu.fund.common.utils.DateUtil;
+import com.sdu.fund.common.utils.NumberUtil;
+import com.sdu.fund.core.model.trade.bo.TradeOrder;
+
 /**
  * @program: fundtrade
  * @description:
@@ -8,6 +12,8 @@ package com.sdu.fund.biz.shared.vo;
  * @create: 2020/2/15 21:21
  **/
 public class PurchaseApplyVO {
+
+    private String orderId;
 
     private String fundName;
 
@@ -20,6 +26,28 @@ public class PurchaseApplyVO {
 
     // 预计查看收益时间
     private String expectProfitViewDate;
+
+    public static PurchaseApplyVO convert(TradeOrder tradeOrder){
+        PurchaseApplyVO purchaseApplyVO = new PurchaseApplyVO();
+        if(tradeOrder == null){
+            return purchaseApplyVO;
+        }
+        purchaseApplyVO.setOrderId(tradeOrder.getTradeOrderId());
+        purchaseApplyVO.setFundName(tradeOrder.getFundName());
+        purchaseApplyVO.setPurchaseAmount(NumberUtil.getBigDecimal_to2_is45(tradeOrder.getTradeOrderAmount()).toString());
+        purchaseApplyVO.setPurchaseTradeOrderType(tradeOrder.getTradeOrderType().getCode());
+        purchaseApplyVO.setExpectComfirmDate(DateUtil.dateToStr(tradeOrder.getPurchaseConfirmDay(),DateUtil.FMT_YMD3));
+        purchaseApplyVO.setExpectComfirmDate(purchaseApplyVO.getExpectComfirmDate());
+        return purchaseApplyVO;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
 
     public String getFundName() {
         return fundName;

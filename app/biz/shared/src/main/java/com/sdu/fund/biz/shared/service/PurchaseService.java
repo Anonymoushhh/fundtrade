@@ -1,6 +1,8 @@
 package com.sdu.fund.biz.shared.service;
 
-import com.sdu.fund.biz.shared.request.WeChatPurchaseApplyRequest;
+import com.sdu.fund.biz.shared.request.WeChatPayOrderRequest;
+import com.sdu.fund.biz.shared.request.WeChatPurchaseApplyOrderRequest;
+import com.sdu.fund.biz.shared.vo.PayVO;
 import com.sdu.fund.biz.shared.vo.PurchaseApplyVO;
 
 /**
@@ -11,8 +13,8 @@ import com.sdu.fund.biz.shared.vo.PurchaseApplyVO;
  **/
 public interface PurchaseService {
 
-    public PurchaseApplyVO apply(WeChatPurchaseApplyRequest weChatPurchaseApplyRequest) throws Exception;
+    public PurchaseApplyVO apply(WeChatPurchaseApplyOrderRequest weChatPurchaseApplyRequest) throws Exception;
 
-    public PurchaseApplyVO pay(WeChatPurchaseApplyRequest weChatPurchaseApplyRequest) throws Exception;
+    public PayVO pay(WeChatPayOrderRequest weChatPayRequest) throws Exception;
 
 }

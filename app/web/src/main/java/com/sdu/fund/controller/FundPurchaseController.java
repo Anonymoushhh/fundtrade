@@ -18,9 +18,11 @@ package com.sdu.fund.controller;
 
 import com.alipay.sofa.runtime.api.annotation.SofaReference;
 import com.sdu.fund.biz.shared.holder.UserContext;
-import com.sdu.fund.biz.shared.service.UserService;
-import com.sdu.fund.biz.shared.vo.UserLoginVO;
-import com.sdu.fund.biz.shared.request.WeChatPurchaseApplyRequest;
+import com.sdu.fund.biz.shared.request.WeChatPayOrderRequest;
+import com.sdu.fund.biz.shared.service.PurchaseService;
+import com.sdu.fund.biz.shared.vo.PayVO;
+import com.sdu.fund.biz.shared.vo.PurchaseApplyVO;
+import com.sdu.fund.biz.shared.request.WeChatPurchaseApplyOrderRequest;
 import com.sdu.fund.vo.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,18 +42,30 @@ public class FundPurchaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(FundPurchaseController.class);
 
     @SofaReference
-    private UserService userService;
+    private PurchaseService purchaseService;
 
     @SofaReference
     private UserContext userContext;
 
     @RequestMapping(value = "/apply", method = RequestMethod.POST)
-    public Response<UserLoginVO> apply(@RequestBody WeChatPurchaseApplyRequest weChatPurchaseApplyRequest) {
+    public Response<PurchaseApplyVO> apply(@RequestBody WeChatPurchaseApplyOrderRequest weChatPurchaseApplyRequest) {
         try {
-
-            return Response.buildSuccessResponse();
+            PurchaseApplyVO purchaseApplyVO = purchaseService.apply(weChatPurchaseApplyRequest);
+            return Response.buildSuccessResponse(purchaseApplyVO);
         } catch (Exception e) {
             LOGGER.error("基金购买申请失败，fundCode={},userId={},msg={}", weChatPurchaseApplyRequest.getFundCode(),
+                    userContext.getCurrentUser().getUserId(), e.getMessage());
+            return Response.buildErrorResponse();
+        }
+    }
+
+    @RequestMapping(value = "/pay", method = RequestMethod.POST)
+    public Response<PayVO> pay(@RequestBody WeChatPayOrderRequest weChatPayRequest) {
+        try {
+            PayVO payVO = purchaseService.pay(weChatPayRequest);
+            return Response.buildSuccessResponse(payVO);
+        } catch (Exception e) {
+            LOGGER.error("基金购买支付失败，tradeOrderId={},userId={},msg={}", weChatPayRequest.getTradeOrderId(),
                     userContext.getCurrentUser().getUserId(), e.getMessage());
             return Response.buildErrorResponse();
         }

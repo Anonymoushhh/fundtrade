@@ -6,8 +6,7 @@ package com.sdu.fund.biz.shared.request;
  * @author: anonymous
  * @create: 2020/2/14 18:14
  **/
-public class WeChatPurchaseApplyRequest {
-
+public class WeChatPurchaseApplyOrderRequest extends BaseOrderRequest {
 
     private String fundCode;
 
@@ -15,9 +14,6 @@ public class WeChatPurchaseApplyRequest {
 
     // 付款金额
     private String tradeOrderAmount;
-
-    // 订单类型
-    private String tradeOrderType;
 
     // 下单渠道
     private String tradeOrderChannel;
@@ -67,14 +63,6 @@ public class WeChatPurchaseApplyRequest {
 
     public void setTradeOrderAmount(String tradeOrderAmount) {
         this.tradeOrderAmount = tradeOrderAmount;
-    }
-
-    public String getTradeOrderType() {
-        return tradeOrderType;
-    }
-
-    public void setTradeOrderType(String tradeOrderType) {
-        this.tradeOrderType = tradeOrderType;
     }
 
     public String getFee() {

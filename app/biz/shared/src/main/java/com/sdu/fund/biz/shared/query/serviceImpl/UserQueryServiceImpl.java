@@ -32,7 +32,7 @@ public class UserQueryServiceImpl implements UserQueryService {
         Result<Long> result = userTokenRepository.getUserIdByToken(token);
         if (result != null && result.isSuccess()) {
             Long userId = result.getData();
-            return userRepository.get(userId);
+            return userRepository.get(userId).getData();
         }
         return null;
     }

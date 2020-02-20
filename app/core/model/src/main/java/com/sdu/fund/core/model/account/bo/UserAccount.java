@@ -1,16 +1,10 @@
 package com.sdu.fund.core.model.account.bo;
 
-import com.google.common.collect.Maps;
-import com.sdu.fund.core.model.account.enums.AuthorityEnum;
-import com.sdu.fund.core.model.account.enums.GenderEnum;
-import com.sdu.fund.core.model.account.enums.UserStatusEnum;
 import com.sdu.fund.core.model.trade.enums.UserAccountStatusEnum;
 import com.sdu.fund.core.model.trade.enums.UserAccountTypeEnum;
 
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @program: fundtrade
@@ -25,17 +19,17 @@ public class UserAccount {
     /**
      * 总金额
      */
-    private BigDecimal totolAccount;
+    private BigDecimal totolAmount;
 
     /**
      * 可用余额
      */
-    private BigDecimal availAccount;
+    private BigDecimal availAmount;
 
     /**
      * 冻结金额
      */
-    private BigDecimal freezeAccount;
+    private BigDecimal freezeAmount;
 
     /**
      * 账户类型
@@ -62,6 +56,19 @@ public class UserAccount {
      */
     private Date gmtModified;
 
+    public static UserAccount createUserAccount(Long userId, BigDecimal totolAmount, BigDecimal availAmount,
+                                                BigDecimal freezeAmount,
+                                                UserAccountTypeEnum type, UserAccountStatusEnum status) {
+        UserAccount userAccount = new UserAccount();
+        userAccount.userId = userId;
+        userAccount.totolAmount = totolAmount;
+        userAccount.availAmount = availAmount;
+        userAccount.freezeAmount= freezeAmount;
+        userAccount.type = type;
+        userAccount.status = status;
+        return userAccount;
+    }
+
     public Long getUserId() {
         return userId;
     }
@@ -70,28 +77,28 @@ public class UserAccount {
         this.userId = userId;
     }
 
-    public BigDecimal getTotolAccount() {
-        return totolAccount;
+    public BigDecimal getTotolAmount() {
+        return totolAmount;
     }
 
-    public void setTotolAccount(BigDecimal totolAccount) {
-        this.totolAccount = totolAccount;
+    public void setTotolAmount(BigDecimal totolAmount) {
+        this.totolAmount = totolAmount;
     }
 
-    public BigDecimal getAvailAccount() {
-        return availAccount;
+    public BigDecimal getAvailAmount() {
+        return availAmount;
     }
 
-    public void setAvailAccount(BigDecimal availAccount) {
-        this.availAccount = availAccount;
+    public void setAvailAmount(BigDecimal availAmount) {
+        this.availAmount = availAmount;
     }
 
-    public BigDecimal getFreezeAccount() {
-        return freezeAccount;
+    public BigDecimal getFreezeAmount() {
+        return freezeAmount;
     }
 
-    public void setFreezeAccount(BigDecimal freezeAccount) {
-        this.freezeAccount = freezeAccount;
+    public void setFreezeAmount(BigDecimal freezeAmount) {
+        this.freezeAmount = freezeAmount;
     }
 
     public UserAccountTypeEnum getType() {

@@ -2,6 +2,7 @@ package com.sdu.fund.core.model.trade.bo;
 
 import com.sdu.fund.common.utils.DateUtil;
 import com.sdu.fund.common.utils.TradeOrderIdUtil;
+import com.sdu.fund.core.model.trade.TradeOrderExtKey;
 import com.sdu.fund.core.model.trade.enums.TradeOrderChannelEnum;
 import com.sdu.fund.core.model.trade.enums.PayChannelEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderStatusEnum;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @program: fundtrade
@@ -19,7 +21,7 @@ import java.util.Date;
  * @author: anonymous
  * @create: 2020/2/13 19:13
  **/
-public class TradeOrder {
+public class TradeOrder extends BaseOrder {
 
     private String tradeOrderId;
 
@@ -94,6 +96,11 @@ public class TradeOrder {
     private Date payTime;
 
     /**
+     * 支付单
+     */
+    private String payOrderId;
+
+    /**
      * 份额确认时间
      */
     private Date shareConfirmTime;
@@ -118,6 +125,8 @@ public class TradeOrder {
      */
     private Date gmtModified;
 
+
+
     /**
      * 订单状态机工厂
      */
@@ -138,10 +147,11 @@ public class TradeOrder {
      * 创建订单
      */
     public void createTradeOrder() {
-        switch (this.getTradeOrderType()){
+        switch (this.getTradeOrderType()) {
             case PURCHASE:
                 long now = System.currentTimeMillis();
-                this.setTradeOrderId(TradeOrderIdUtil.genTradeOrderId(this.getUserId(),now,this.getTradeOrderChannel().getCode()));
+                this.setTradeOrderId(TradeOrderIdUtil.genTradeOrderId(this.getUserId(), now,
+                        this.getTradeOrderChannel().getCode()));
                 this.setTradeOrderTime(DateUtil.unixToDate(now));
                 this.setTradeOrderStatus(TradeOrderStatusEnum.INIT);
                 break;
@@ -149,6 +159,22 @@ public class TradeOrder {
             case FIXED:
                 break;
         }
+    }
+
+    public void setPurchaseConfirmDay(Date date) {
+        extInfo.put(TradeOrderExtKey.PURCHASECONFIRMDAY, date);
+    }
+
+    public Date getPurchaseConfirmDay() {
+        return (Date) extInfo.get(TradeOrderExtKey.PURCHASECONFIRMDAY);
+    }
+
+    public String getPayOrderId() {
+        return payOrderId;
+    }
+
+    public void setPayOrderId(String payOrderId) {
+        this.payOrderId = payOrderId;
     }
 
     public String getTradeOrderId() {

@@ -84,6 +84,11 @@ public class NumberUtil {
         return Double.parseDouble(df.format(num));
     }
 
+    public static BigDecimal getBigDecimal_to2_is45(BigDecimal num){
+        num.setScale(2, BigDecimal.ROUND_HALF_UP);
+        return num;
+    }
+
 
     /**
      *

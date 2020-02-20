@@ -12,7 +12,7 @@ import java.util.Date;
  * @author: anonymous
  * @create: 2020/2/17 12:26
  **/
-public class Payment {
+public class Payment extends BaseOrder{
 
     private String payOrderId;
 

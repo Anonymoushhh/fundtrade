@@ -1,5 +1,6 @@
 package com.sdu.fund.core.converter;
 
+import com.alibaba.fastjson.JSON;
 import com.sdu.fund.common.dal.entity.TradeOrderDo;
 import com.sdu.fund.core.model.account.enums.AuthorityEnum;
 import com.sdu.fund.core.model.account.enums.GenderEnum;
@@ -7,6 +8,8 @@ import com.sdu.fund.core.model.trade.bo.TradeOrder;
 import com.sdu.fund.core.model.trade.enums.TradeOrderStatusEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderTypeEnum;
 import org.springframework.beans.BeanUtils;
+
+import java.util.Map;
 
 /**
  * @program: fundtrade
@@ -21,9 +24,10 @@ public class TradeOrderConverter {
             return null;
         }
         TradeOrder tradeOrder = new TradeOrder();
-        BeanUtils.copyProperties(tradeOrderDo,tradeOrder,"tradeOrderType", "tradeOrderStatus");
-        tradeOrder.setTradeOrderType(TradeOrderTypeEnum.getEnumByCode(tradeOrderDo.getTradeOrderType()));
-        tradeOrder.setTradeOrderStatus(TradeOrderStatusEnum.getEnumByCode(tradeOrderDo.getTradeOrderStatus()));
+        BeanUtils.copyProperties(tradeOrderDo,tradeOrder,"tradeOrderType", "tradeOrderStatus", "extInfo");
+        tradeOrder.setTradeOrderType(TradeOrderTypeEnum.getEnumByCode(tradeOrderDo.getOrderType()));
+        tradeOrder.setTradeOrderStatus(TradeOrderStatusEnum.getEnumByCode(tradeOrderDo.getOrderStatus()));
+        tradeOrder.setExtInfo(JSON.parseObject(tradeOrderDo.getExtInfo(), Map.class));
 
         return tradeOrder;
     }
@@ -34,9 +38,14 @@ public class TradeOrderConverter {
         }
         TradeOrderDo tradeOrderDo = new TradeOrderDo();
         BeanUtils.copyProperties(tradeOrder,tradeOrderDo,"tradeOrderType", "tradeOrderStatus");
-        tradeOrderDo.setTradeOrderType(tradeOrder.getTradeOrderType().getCode());
-        tradeOrderDo.setTradeOrderStatus(tradeOrder.getTradeOrderStatus().getCode());
+        tradeOrderDo.setOrderType(tradeOrder.getTradeOrderType().getCode());
+        tradeOrderDo.setOrderStatus(tradeOrder.getTradeOrderStatus().getCode());
+        tradeOrderDo.setExtInfo(JSON.toJSONString(tradeOrder.getExtInfo()));
 
         return tradeOrderDo;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(JSON.parseObject(null, Map.class));;
     }
 }

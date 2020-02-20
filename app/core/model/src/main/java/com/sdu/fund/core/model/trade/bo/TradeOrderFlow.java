@@ -1,5 +1,6 @@
 package com.sdu.fund.core.model.trade.bo;
 
+import com.sdu.fund.common.utils.SnowflakeIdUtil;
 import com.sdu.fund.core.model.trade.enums.FlowInitiatorEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderFlowTypeEnum;
 
@@ -13,7 +14,7 @@ import java.util.Date;
  **/
 public class TradeOrderFlow {
 
-    private String flowId;
+    private Long flowId;
 
     /**
      *
@@ -46,6 +47,11 @@ public class TradeOrderFlow {
     private Date flowTime;
 
     /**
+     * 流水合法性，默认合法
+     */
+    private Boolean valid;
+
+    /**
      *
      */
     private Date gmtCreate;
@@ -55,12 +61,44 @@ public class TradeOrderFlow {
      */
     private Date gmtModified;
 
-    public String getFlowId() {
+    public static TradeOrderFlow createFlow(TradeOrder tradeOrder, TradeOrderFlowTypeEnum tradeOrderFlowType) {
+        TradeOrderFlow tradeOrderFlow = new TradeOrderFlow();
+        tradeOrderFlow.setFlowId(SnowflakeIdUtil.getInstance().nextId());
+        tradeOrderFlow.setOrderId(tradeOrder.getTradeOrderId());
+        tradeOrderFlow.setUserId(tradeOrder.getUserId());
+        tradeOrderFlow.setType(tradeOrderFlowType);
+        switch (tradeOrderFlowType) {
+            case USER_ORDER:
+            case USER_PAY:
+            case USER_NO_PAY:
+            case USER_CANCEL_OR_TIMEOUT:
+            case USER_CACEL:
+            case USER_DELAY_PAY:
+                tradeOrderFlow.setInitiator(FlowInitiatorEnum.USER);
+            case SYSTEM_RECEIVE_ORDER:
+            case SYSTEM_CONFIRM:
+            case SYSTEM_FINFISH:
+            default:
+                tradeOrderFlow.setInitiator(FlowInitiatorEnum.SYSTEM);
+        }
+        tradeOrderFlow.setFlowTime(new Date());
+        return tradeOrderFlow;
+    }
+
+    public Long getFlowId() {
         return flowId;
     }
 
-    public void setFlowId(String flowId) {
+    public void setFlowId(Long flowId) {
         this.flowId = flowId;
+    }
+
+    public Boolean getValid() {
+        return valid;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
     }
 
     public String getOrderId() {

@@ -1,7 +1,9 @@
 package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
+import com.sdu.fund.common.dal.extMapper.ExtUserAccountMapper;
 import com.sdu.fund.common.dal.mapper.UserAccountMapper;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
@@ -12,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -26,6 +30,9 @@ public class UserAccountRepositoryImpl implements UserAccountRepository {
 
     @Autowired
     private UserAccountMapper userAccountMapper;
+
+    @Autowired
+    private ExtUserAccountMapper extUserAccountMapper;
 
 
     @Override
@@ -139,4 +146,30 @@ public class UserAccountRepositoryImpl implements UserAccountRepository {
         return Validator.notNull(userAccount) && Validator.notNull(userAccount.getUserId());
     }
 
+    @Override
+    public Result accountIn(Long userId, BigDecimal amount, BigDecimal freezeAmount) {
+        try {
+            extUserAccountMapper.accountIn(userId, amount, freezeAmount);
+            return ResultUtil.buildSuccessResult();
+        } catch (DataAccessException e1) {
+            LOGGER.error("用户账户入账失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+        } catch (Exception e2) {
+            LOGGER.error("用户账户入账失败，userId={},errCode={}", userId, ResultCode.SERVER_EXCEPTION);
+            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+        }
+    }
+
+    @Override
+    public Result accountOut(Long userId, BigDecimal amount) {
+        try {
+            extUserAccountMapper.accountOut(userId, amount);
+        } catch (DataAccessException e1) {
+            LOGGER.error("用户账户出账失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户出账失败");
+        } catch (Exception e2) {
+            LOGGER.error("用户账户出账失败，userId={},errCode={}", userId, ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户出账失败");
+        }
+    }
 }

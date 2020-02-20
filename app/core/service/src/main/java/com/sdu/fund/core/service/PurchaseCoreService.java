@@ -1,5 +1,6 @@
 package com.sdu.fund.core.service;
 
+import com.sdu.fund.core.model.trade.bo.Payment;
 import com.sdu.fund.core.model.trade.bo.TradeOrder;
 
 /**
@@ -12,7 +13,7 @@ public interface PurchaseCoreService {
 
     public TradeOrder apply(TradeOrder tradeOrder);
 
-    public TradeOrder pay(TradeOrder tradeOrder);
+    public Payment pay(Payment payment);
 
     public TradeOrder confirm(TradeOrder tradeOrder);
 

@@ -10,4 +10,6 @@ import com.sdu.fund.core.model.trade.bo.TradeOrder;
  **/
 public interface TradeOrderRepository extends Repository<TradeOrder,String> {
 
+    public TradeOrder lock(String orderId);
+
 }

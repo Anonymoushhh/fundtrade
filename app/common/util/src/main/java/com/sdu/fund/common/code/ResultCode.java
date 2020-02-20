@@ -34,4 +34,7 @@ public class ResultCode {
 
     /* 未登录*/
     public static final int  NO_LOGIN = 8;
+
+    /* 系统异常*/
+    public static final int  SYSTEM_EXCEPTION = 9;
 }
