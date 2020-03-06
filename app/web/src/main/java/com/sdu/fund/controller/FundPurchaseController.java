@@ -17,13 +17,10 @@
 package com.sdu.fund.controller;
 
 import com.alipay.sofa.runtime.api.annotation.SofaReference;
-import com.sdu.fund.biz.shared.holder.UserContext;
-import com.sdu.fund.biz.shared.request.WeChatPayOrderRequest;
+import com.sdu.fund.biz.shared.context.UserContext;
+import com.sdu.fund.biz.shared.request.*;
 import com.sdu.fund.biz.shared.service.PurchaseService;
-import com.sdu.fund.biz.shared.vo.PayVO;
-import com.sdu.fund.biz.shared.vo.PurchaseApplyVO;
-import com.sdu.fund.biz.shared.request.WeChatPurchaseApplyOrderRequest;
-import com.sdu.fund.vo.Response;
+import com.sdu.fund.biz.shared.vo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2.5.8
  */
 @RestController
-@RequestMapping("/fundTrade/purchase")
+@RequestMapping("/fundTrade/trade/purchase")
 public class FundPurchaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FundPurchaseController.class);
@@ -46,6 +43,30 @@ public class FundPurchaseController {
 
     @SofaReference
     private UserContext userContext;
+
+    @RequestMapping(value = "/preApply", method = RequestMethod.POST)
+    public Response<PurchasePreApplyVO> preApply(@RequestBody WeChatPurchasePreApplyOrderRequest weChatPurchasePreApplyOrderRequest) {
+        try {
+            PurchasePreApplyVO purchasePreApplyVO = purchaseService.preApply(weChatPurchasePreApplyOrderRequest);
+            return Response.buildSuccessResponse(purchasePreApplyVO);
+        } catch (Exception e) {
+            LOGGER.error("基金购买预申请失败，fundCode={},userId={},msg={}", weChatPurchasePreApplyOrderRequest.getFundCode(),
+                    userContext.getCurrentUser().getUserId(), e.getMessage());
+            return Response.buildErrorResponse();
+        }
+    }
+
+    @RequestMapping(value = "/applyCheck", method = RequestMethod.POST)
+    public Response<PurchaseApplyCheckVO> applyCheck(@RequestBody WeChatPurchaseApplyCheckRequest weChatPurchaseApplyCheckRequest) {
+        try {
+            PurchaseApplyCheckVO purchaseApplyCheckVO = purchaseService.applyCheck(weChatPurchaseApplyCheckRequest);
+            return Response.buildSuccessResponse(purchaseApplyCheckVO);
+        } catch (Exception e) {
+            LOGGER.error("用户申购申请金额校验失败，fundCode={},userId={},msg={}", weChatPurchaseApplyCheckRequest.getFundCode(),
+                    userContext.getCurrentUser().getUserId(), e.getMessage());
+            return Response.buildErrorResponse();
+        }
+    }
 
     @RequestMapping(value = "/apply", method = RequestMethod.POST)
     public Response<PurchaseApplyVO> apply(@RequestBody WeChatPurchaseApplyOrderRequest weChatPurchaseApplyRequest) {
@@ -66,6 +87,17 @@ public class FundPurchaseController {
             return Response.buildSuccessResponse(payVO);
         } catch (Exception e) {
             LOGGER.error("基金购买支付失败，tradeOrderId={},userId={},msg={}", weChatPayRequest.getTradeOrderId(),
+                    userContext.getCurrentUser().getUserId(), e.getMessage());
+            return Response.buildErrorResponse();
+        }
+    }
+    @RequestMapping(value = "/payCannel", method = RequestMethod.POST)
+    public Response<PayCannelVO> payCannel(@RequestBody WeChatPayCannelRequest weChatPayRequest) {
+        try {
+            PayCannelVO payCannelVO = purchaseService.payCannel(weChatPayRequest);
+            return Response.buildSuccessResponse(payCannelVO);
+        } catch (Exception e) {
+            LOGGER.error("基金购买支付取消失败，tradeOrderId={},userId={},msg={}", weChatPayRequest.getTradeOrderId(),
                     userContext.getCurrentUser().getUserId(), e.getMessage());
             return Response.buildErrorResponse();
         }

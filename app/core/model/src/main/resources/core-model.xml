@@ -7,6 +7,7 @@
             http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd http://www.springframework.org/schema/context
             http://www.springframework.org/schema/context/spring-context-4.2.xsd"
        default-autowire="byName">
+
     <bean id="tradeOrderStatusMachineFactory" class="com.sdu.fund.core.model.trade.factory.TradeOrderStatusMachineFactory"/>
 
 </beans>

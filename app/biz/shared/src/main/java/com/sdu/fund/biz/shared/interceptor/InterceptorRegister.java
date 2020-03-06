@@ -15,8 +15,9 @@ public class InterceptorRegister  extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(userInterceptor).
-                addPathPatterns("/tradeOrder/**",
-                        "/user/**"
+                addPathPatterns("/fundTrade/trade/**",
+                        "/user/**",
+                        "/fundTrade/holdPositions/**"
                         );
         super.addInterceptors(registry);
     }

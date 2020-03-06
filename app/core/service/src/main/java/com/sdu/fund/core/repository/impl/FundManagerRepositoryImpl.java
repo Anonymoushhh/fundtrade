@@ -2,6 +2,7 @@ package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundManagerMapper;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
@@ -28,101 +29,82 @@ public class FundManagerRepositoryImpl implements FundManagerRepository {
     private FundManagerMapper fundManagerMapper;
 
     @Override
-    public Result<FundManager> get(String managerId) {
+    public FundManager get(String managerId) {
         Validator.notNull(managerId);
         try {
             FundManager fundManager =
                     FundManagerConverter.FundManagerDoconvert2FundManager(fundManagerMapper.selectByPrimaryKey(managerId));
-            return ResultUtil.buildSuccessResult(fundManager);
+            return fundManager;
         } catch (DataAccessException e1) {
             LOGGER.error("基金经理信息查询失败，managerId={},errCode={}", managerId, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金经理信息查询失败");
         } catch (Exception e2) {
             LOGGER.error("基金经理信息查询失败，managerId={},errCode={}", managerId, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金经理信息查询失败");
         }
     }
 
     @Override
-    public Result add(FundManager fundManager) {
-        // 预校验
-        boolean check = preCheck(fundManager);
-        if (!check) {
-            LOGGER.error("基金经理信息插入失败，managerId={},errCode={}", fundManager.getManagerId(),
-                ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(FundManager fundManager) {
         try {
+            // 预校验
+            preCheck(fundManager);
             int id = fundManagerMapper.insertSelective(FundManagerConverter.FundManagerconvert2FundManagerDo(fundManager));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("基金经理信息插入失败，managerId={},errCode={}", fundManager.getManagerId(),
                     ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金经理信息插入失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金经理信息插入失败，managerId={},errCode={}", fundManager.getManagerId(),
                 ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金经理信息插入失败");
         } catch (Exception e2) {
             LOGGER.error("基金经理信息插入失败，managerId={},errCode={}", fundManager.getManagerId(),
                 ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金经理信息插入失败");
         }
     }
 
     @Override
-    public Result update(FundManager fundManager) {
-        // 预校验
-        boolean check = preCheck(fundManager);
-        if (!check) {
-            LOGGER.error("基金经理信息更新失败，managerId={},errCode={}", fundManager.getManagerId(),
-                ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(FundManager fundManager) {
         try {
+            preCheck(fundManager);
             int count =
                 fundManagerMapper.updateByPrimaryKeySelective(FundManagerConverter.FundManagerconvert2FundManagerDo(fundManager));
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("基金经理信息更新失败，managerId={},errCode={}", fundManager.getManagerId(),
                     ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金经理信息更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金经理信息更新失败，managerId={},errCode={}", fundManager.getManagerId(),
                 ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金经理信息更新失败");
         } catch (Exception e2) {
             LOGGER.error("基金经理信息更新失败，managerId={},errCode={}", fundManager.getManagerId(),
                 ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金经理信息更新失败");
         }
     }
 
     @Override
-    public Result delete(String managerId) {
+    public void delete(String managerId) {
         try {
             int count = fundManagerMapper.deleteByPrimaryKey(managerId);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("基金经理信息删除失败，managerId={},errCode={}", managerId,
                     ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金经理信息删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金经理信息删除失败，managerId={},errCode={}", managerId,
                 ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金经理信息删除失败");
         } catch (Exception e2) {
             LOGGER.error("基金经理信息删除失败，managerId={},errCode={}", managerId,
                 ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金经理信息删除失败");
         }
     }
 
@@ -133,7 +115,8 @@ public class FundManagerRepositoryImpl implements FundManagerRepository {
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(FundManager fundManager) {
-        return Validator.notNull(fundManager) && Validator.notNull(fundManager.getManagerId());
+    private void preCheck(FundManager fundManager) {
+        Validator.notNull(fundManager);
+        Validator.notNull(fundManager.getManagerId());
     }
 }

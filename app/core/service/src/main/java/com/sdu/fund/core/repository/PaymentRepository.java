@@ -11,4 +11,6 @@ import com.sdu.fund.core.model.trade.bo.Payment;
 public interface PaymentRepository extends Repository<Payment,String> {
 
     public Payment lock(String payOrderId);
+
+    public Payment getByOrderId(String orderId);
 }

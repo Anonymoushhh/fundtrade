@@ -11,4 +11,8 @@ import com.sdu.fund.core.model.trade.bo.TradeOrderFlow;
 public interface TradeOrderFlowRepository extends Repository<TradeOrderFlow,Long> {
 
     public TradeOrderFlow lock(Long flowId);
+
+    public TradeOrderFlow getByIdempotentId(String idempotentId);
+
+    public void makeInValid(Long flowId);
 }

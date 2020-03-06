@@ -1,7 +1,9 @@
 package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
+import com.sdu.fund.common.dal.extMapper.ExtUserAccountFlowMapper;
 import com.sdu.fund.common.dal.mapper.UserAccountFlowMapper;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
@@ -26,104 +28,87 @@ public class UserAccountFlowRepositoryImpl implements UserAccountFlowRepository 
 
     @Autowired
     private UserAccountFlowMapper userAccountFlowMapper;
-    
+
+    @Autowired
+    private ExtUserAccountFlowMapper extUserAccountFlowMapper;
+
     @Override
-    public Result<UserAccountFlow> get(Long flowId) {
+    public UserAccountFlow get(Long flowId) {
         Validator.notNull(flowId);
         try {
             UserAccountFlow userAccountFlow =
                     UserAccountFlowConverter.UserAccountFlowDoconvert2UserAccountFlow(userAccountFlowMapper.selectByPrimaryKey(flowId));
-            return ResultUtil.buildSuccessResult(userAccountFlow);
+            return userAccountFlow;
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户流水查询失败，flowId={},errCode={}", flowId, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户流水查询失败");
         } catch (Exception e2) {
             LOGGER.error("用户账户流水查询失败，flowId={},errCode={}", flowId, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户流水查询失败");
         }
     }
 
     @Override
-    public Result add(UserAccountFlow userAccountFlow) {
-        // 预校验
-        boolean check = preCheck(userAccountFlow);
-        if (!check) {
-            LOGGER.error("用户账户流水插入失败，flowId={},errCode={}", userAccountFlow.getUserId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(UserAccountFlow userAccountFlow) {
         try {
+            preCheck(userAccountFlow);
             int id =
                     userAccountFlowMapper.insertSelective(UserAccountFlowConverter.UserAccountFlowconvert2UserAccountFlowDo(userAccountFlow));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("用户账户流水插入失败，flowId={},errCode={}", userAccountFlow.getUserId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户流水插入失败");
             }
         } catch (DataAccessException e1) {
-            LOGGER.error("用户账户流水插入失败，flowId={},errCode={}", userAccountFlow.getUserId(),
-                    ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            LOGGER.error("用户账户流水插入失败，flowId={},errCode={},msg={}", userAccountFlow.getUserId(),
+                    ResultCode.DATABASE_EXCEPTION, e1.getMessage());
+            throw new CommonException("用户账户流水插入失败");
         } catch (Exception e2) {
-            LOGGER.error("用户账户流水插入失败，flowId={},errCode={}", userAccountFlow.getUserId(),
-                    ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            LOGGER.error("用户账户流水插入失败，flowId={},errCode={},msg={}", userAccountFlow.getUserId(),
+                    ResultCode.SERVER_EXCEPTION, e2.getMessage());
+            throw new CommonException("用户账户流水插入失败");
         }
     }
 
     @Override
-    public Result update(UserAccountFlow userAccountFlow) {
-        // 预校验
-        boolean check = preCheck(userAccountFlow);
-        if (!check) {
-            LOGGER.error("用户账户流水更新失败，flowId={},errCode={}", userAccountFlow.getUserId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(UserAccountFlow userAccountFlow) {
         try {
+            preCheck(userAccountFlow);
             int count =
                     userAccountFlowMapper.updateByPrimaryKeySelective(UserAccountFlowConverter.UserAccountFlowconvert2UserAccountFlowDo(userAccountFlow));
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户账户流水更新失败，flowId={},errCode={}", userAccountFlow.getUserId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户流水更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户流水更新失败，flowId={},errCode={}", userAccountFlow.getUserId(),
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户流水更新失败");
         } catch (Exception e2) {
             LOGGER.error("用户账户流水更新失败，flowId={},errCode={}", userAccountFlow.getUserId(),
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户流水更新失败");
         }
     }
 
     @Override
-    public Result delete(Long flowId) {
+    public void delete(Long flowId) {
         try {
             int count = userAccountFlowMapper.deleteByPrimaryKey(flowId);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户账户流水删除失败，flowId={},errCode={}", flowId,
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户流水删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户流水删除失败，flowId={},errCode={}", flowId,
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户流水删除失败");
         } catch (Exception e2) {
             LOGGER.error("用户账户流水删除失败，flowId={},errCode={}", flowId,
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户流水删除失败");
         }
     }
 
@@ -134,12 +119,43 @@ public class UserAccountFlowRepositoryImpl implements UserAccountFlowRepository 
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(UserAccountFlow userAccountFlow) {
-        return Validator.notNull(userAccountFlow) && Validator.notNull(userAccountFlow.getFlowId());
+    private void preCheck(UserAccountFlow userAccountFlow) {
+        Validator.notNull(userAccountFlow);
+        Validator.notNull(userAccountFlow.getFlowId());
     }
 
     @Override
     public UserAccountFlow lock(Long flowId) {
-        return null;
+        Validator.notNull(flowId);
+        try {
+            UserAccountFlow userAccountFlow =
+                    UserAccountFlowConverter.UserAccountFlowDoconvert2UserAccountFlow(extUserAccountFlowMapper.lockByPrimaryKey(flowId));
+            return userAccountFlow;
+        } catch (DataAccessException e1) {
+            LOGGER.error("用户账户流水锁定失败，flowId={},errCode={}", flowId, ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户流水锁定失败");
+        } catch (Exception e2) {
+            LOGGER.error("用户账户流水锁定失败，flowId={},errCode={}", flowId, ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户流水锁定失败");
+        }
+    }
+
+    @Override
+    public void makeInValid(Long flowId) {
+        try {
+            int count =
+                    extUserAccountFlowMapper.makeInValid(flowId);
+            if (count <= 0) {
+                LOGGER.error("使账户流水非法失败，flowId={},errCode={}", flowId, ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("使账户流水非法失败");
+            }
+        } catch (DataAccessException e1) {
+            LOGGER.error("使账户流水非法失败，flowId={},errCode={},msg={}", flowId, ResultCode.DATABASE_EXCEPTION,
+                    e1.getMessage());
+            throw new CommonException("使账户流水非法失败");
+        } catch (Exception e2) {
+            LOGGER.error("使账户流水非法失败，flowId={},errCode={},msg={}", flowId, ResultCode.SERVER_EXCEPTION, e2.getMessage());
+            throw new CommonException("使账户流水非法失败");
+        }
     }
 }

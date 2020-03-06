@@ -16,12 +16,12 @@ import org.springframework.beans.BeanUtils;
  **/
 public class UserConverter {
 
-    public static User UserDoconvert2User(UserDo userDo){
-        if(userDo == null){
+    public static User UserDoconvert2User(UserDo userDo) {
+        if (userDo == null) {
             return null;
         }
         User user = new User();
-        BeanUtils.copyProperties(userDo,user,"gender", "authority", "type", "status");
+        BeanUtils.copyProperties(userDo, user, "gender", "authority", "type", "status");
         user.setAuthority(AuthorityEnum.getEnumByCode(userDo.getAuthority()));
         user.setGender(GenderEnum.getEnumByCode(userDo.getGender()));
         user.setStatus(UserStatusEnum.getEnumByCode(userDo.getStatus()));
@@ -30,15 +30,15 @@ public class UserConverter {
         return user;
     }
 
-    public static UserDo Userconvert2UserDo(User user){
-        if(user == null){
+    public static UserDo Userconvert2UserDo(User user) {
+        if (user == null) {
             return null;
         }
         UserDo userDo = new UserDo();
-        BeanUtils.copyProperties(user,userDo,"gender", "authority", "status");
-        userDo.setAuthority(user.getAuthority().getCode());
-        userDo.setGender(user.getGender().getCode());
-        userDo.setStatus(user.getStatus().getCode());
+        BeanUtils.copyProperties(user, userDo, "gender", "authority", "status");
+        userDo.setAuthority(user.getAuthority() != null ? user.getAuthority().getCode() : null);
+        userDo.setGender(user.getGender() != null ? user.getGender().getCode() : null);
+        userDo.setStatus(user.getStatus() != null ? user.getStatus().getCode() : null);
 
         return userDo;
     }

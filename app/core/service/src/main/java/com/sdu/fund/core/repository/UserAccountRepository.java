@@ -1,8 +1,6 @@
 package com.sdu.fund.core.repository;
 
-import com.sdu.fund.common.result.Result;
 import com.sdu.fund.core.model.account.bo.UserAccount;
-import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 
@@ -14,8 +12,10 @@ import java.math.BigDecimal;
  **/
 public interface UserAccountRepository extends Repository<UserAccount,Long> {
 
-    public Result accountIn(Long userId, BigDecimal amount, BigDecimal freezeAmount);
+    public UserAccount lock(Long userId);
 
-    public Result accountOut(Long userId, BigDecimal amount);
+    public void accountIn(Long userId, BigDecimal amount, BigDecimal freezeAmount);
+
+    public void accountOut(Long userId, BigDecimal amount, BigDecimal freezeAmount);
 
 }

@@ -1,4 +1,4 @@
-package com.sdu.fund.enums;
+package com.sdu.fund.biz.shared.enums;
 
 /**
  * @program: fundtrade
@@ -12,7 +12,9 @@ package com.sdu.fund.enums;
 public enum CodeEnum {
 
     SUCCESS(0, "请求成功"),
-    FAIL(1, "请求失败");
+    FAIL(1, "请求失败"),
+    SYSTEM_ERROR(2, "系统错误"),
+    NO_LOGIN(3, "未登录"),;
 
     /**
      * 响应状态码

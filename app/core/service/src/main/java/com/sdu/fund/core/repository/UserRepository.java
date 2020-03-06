@@ -1,6 +1,5 @@
 package com.sdu.fund.core.repository;
 
-import com.sdu.fund.common.result.Result;
 import com.sdu.fund.core.model.account.bo.User;
 
 /**
@@ -11,5 +10,5 @@ import com.sdu.fund.core.model.account.bo.User;
  **/
 public interface UserRepository extends Repository<User,Long> {
 
-    public Result<User> getByOpenId(String openId);
+    public User getByOpenId(String openId);
 }

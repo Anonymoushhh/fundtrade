@@ -3,6 +3,7 @@ package com.sdu.fund.core.repository.impl;
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.extMapper.ExtUserTokenMapper;
 import com.sdu.fund.common.dal.mapper.UserTokenMapper;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
@@ -32,115 +33,96 @@ public class UserTokenRepositoryImpl implements UserTokenRepository {
     private ExtUserTokenMapper extUserTokenMapper;
 
     @Override
-    public Result<UserToken> get(Long tokenId) {
+    public UserToken get(Long tokenId) {
         try {
             Validator.notNull(tokenId);
             UserToken userToken =
                     UserTokenConverter.UserTokenDoconvert2UserToken(userTokenMapper.selectByPrimaryKey(tokenId));
-            return ResultUtil.buildSuccessResult(userToken);
+            return userToken;
         } catch (DataAccessException e1) {
             LOGGER.error("用户登录Token查询失败，tokenId={},errCode={}", tokenId, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户登录Token查询失败");
         } catch (Exception e2) {
             LOGGER.error("用户登录Token查询失败，tokenId={},errCode={}", tokenId, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户登录Token查询失败");
         }
     }
 
     @Override
-    public Result<Long> getUserIdByToken(String token) {
+    public Long getUserIdByToken(String token) {
+        Validator.notNull(token);
         try {
             Long userId = extUserTokenMapper.selectUserIdByToken(token);
-            return ResultUtil.buildSuccessResult(userId);
+            return userId;
         } catch (DataAccessException e1) {
             LOGGER.error("用户id查询失败，token={},errCode={}", token, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户id查询失败");
         } catch (Exception e2) {
             LOGGER.error("用户id查询失败，token={},errCode={}", token, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户id查询失败");
         }
     }
 
     @Override
-    public Result add(UserToken userToken) {
-        // 预校验
-        boolean check = preCheck(userToken);
-        if (!check) {
-            LOGGER.error("用户登录Token插入失败，tokenId={},errCode={}", userToken.getTokenId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(UserToken userToken) {
         try {
+            preCheck(userToken);
             int id = userTokenMapper.insertSelective(UserTokenConverter.UserTokenconvert2UserTokenDo(userToken));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("用户登录Token插入失败，tokenId={},errCode={}", userToken.getTokenId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户登录Token插入失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户登录Token插入失败，tokenId={},errCode={}", userToken.getTokenId(),
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户登录Token插入失败");
         } catch (Exception e2) {
             LOGGER.error("用户登录Token插入失败，tokenId={},errCode={}", userToken.getTokenId(),
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户登录Token插入失败");
         }
     }
 
     @Override
-    public Result update(UserToken userToken) {
-        // 预校验
-        boolean check = preCheck(userToken);
-        if (!check) {
-            LOGGER.error("用户登录Token更新失败，tokenId={},errCode={}", userToken.getTokenId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(UserToken userToken) {
         try {
+            preCheck(userToken);
             int count =
                     userTokenMapper.updateByPrimaryKeySelective(UserTokenConverter.UserTokenconvert2UserTokenDo(userToken));
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户登录Token更新失败，tokenId={},errCode={}", userToken.getTokenId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户登录Token更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户登录Token更新失败，tokenId={},errCode={}", userToken.getTokenId(),
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户登录Token更新失败");
         } catch (Exception e2) {
             LOGGER.error("用户登录Token更新失败，tokenId={},errCode={}", userToken.getTokenId(),
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户登录Token更新失败");
         }
     }
 
     @Override
-    public Result delete(Long tokenId) {
+    public void delete(Long tokenId) {
         try {
             int count = userTokenMapper.deleteByPrimaryKey(tokenId);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户登录Token删除失败，tokenId={},errCode={}", tokenId,
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户登录Token删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户登录Token删除失败，tokenId={},errCode={}", tokenId,
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户登录Token删除失败");
         } catch (Exception e2) {
             LOGGER.error("用户登录Token删除失败，tokenId={},errCode={}", tokenId,
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户登录Token删除失败");
         }
     }
 
@@ -151,8 +133,9 @@ public class UserTokenRepositoryImpl implements UserTokenRepository {
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(UserToken userToken) {
-        return Validator.notNull(userToken) && Validator.notNull(userToken.getTokenId());
+    private void preCheck(UserToken userToken) {
+        Validator.notNull(userToken);
+        Validator.notNull(userToken.getTokenId());
     }
 
 }

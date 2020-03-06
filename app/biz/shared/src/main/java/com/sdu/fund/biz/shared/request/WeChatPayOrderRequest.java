@@ -11,13 +11,10 @@ public class WeChatPayOrderRequest extends BaseOrderRequest {
     private String tradeOrderId;
 
     // 付款金额
-    private String orderAmount;
+    private String payAmount;
 
     // 支付渠道
     private String payChannel;
-
-    // 支付状态
-    private String payStatus;
 
     public String getTradeOrderId() {
         return tradeOrderId;
@@ -27,12 +24,12 @@ public class WeChatPayOrderRequest extends BaseOrderRequest {
         this.tradeOrderId = tradeOrderId;
     }
 
-    public String getOrderAmount() {
-        return orderAmount;
+    public String getPayAmount() {
+        return payAmount;
     }
 
-    public void setOrderAmount(String orderAmount) {
-        this.orderAmount = orderAmount;
+    public void setPayAmount(String payAmount) {
+        this.payAmount = payAmount;
     }
 
     public String getPayChannel() {
@@ -43,11 +40,4 @@ public class WeChatPayOrderRequest extends BaseOrderRequest {
         this.payChannel = payChannel;
     }
 
-    public String getPayStatus() {
-        return payStatus;
-    }
-
-    public void setPayStatus(String payStatus) {
-        this.payStatus = payStatus;
-    }
 }

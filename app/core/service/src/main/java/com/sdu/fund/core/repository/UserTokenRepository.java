@@ -11,5 +11,5 @@ import com.sdu.fund.core.model.account.bo.UserToken;
  **/
 public interface UserTokenRepository extends Repository<UserToken,Long> {
 
-    public Result<Long> getUserIdByToken(String token);
+    public Long getUserIdByToken(String token);
 }

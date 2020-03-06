@@ -1,4 +1,4 @@
-package com.sdu.fund.core.model.trade;
+package com.sdu.fund.core.model.trade.constants;
 
 /**
  * @program: fundtrade

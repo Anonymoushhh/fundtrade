@@ -10,11 +10,11 @@ import com.sdu.fund.common.result.Result;
  **/
 public interface Repository<T,K> {
 
-    public Result<T> get(K primaryKey);
+    public T get(K primaryKey);
 
-    public Result add(T entity);
+    public void add(T entity);
 
-    public Result update(T entity);
+    public void update(T entity);
 
-    public Result delete(K primaryKey);
+    public void delete(K primaryKey);
 }

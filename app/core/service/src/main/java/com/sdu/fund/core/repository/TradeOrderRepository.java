@@ -12,4 +12,6 @@ public interface TradeOrderRepository extends Repository<TradeOrder,String> {
 
     public TradeOrder lock(String orderId);
 
+    public TradeOrder getByIdempotentId(String idempotentId);
+
 }

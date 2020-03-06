@@ -3,6 +3,7 @@ package com.sdu.fund.core.repository.impl;
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.extMapper.ExtUserMapper;
 import com.sdu.fund.common.dal.mapper.UserMapper;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
@@ -32,100 +33,80 @@ public class UserRepositoryImpl implements UserRepository {
     private ExtUserMapper extUserMapper;
 
     @Override
-    public Result<User> get(Long userId) {
+    public User get(Long userId) {
         Validator.notNull(userId);
         try {
             User user = UserConverter.UserDoconvert2User(userMapper.selectByPrimaryKey(userId));
-            return ResultUtil.buildSuccessResult(user);
+            return user;
         } catch (DataAccessException e1) {
             LOGGER.error("用户查询失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户查询失败");
         } catch (Exception e2) {
             LOGGER.error("用户查询失败，userId={},errCode={}", userId, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户查询失败");
         }
     }
 
     @Override
-    public Result add(User user) {
-        // 预校验
-        boolean check = preCheck(user);
-        if (!check) {
-            LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(User user) {
         try {
+            preCheck(user);
             int id = userMapper.insertSelective(UserConverter.Userconvert2UserDo(user));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户信息插入失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户信息插入失败");
         } catch (Exception e2) {
             LOGGER.error("用户信息插入失败，userId={},errCode={}", user.getUserId(),
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户信息插入失败");
         }
     }
 
     @Override
-    public Result update(User user) {
-        // 预校验
-        boolean check = preCheck(user);
-        if (!check) {
-            LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(User user) {
         try {
+            preCheck(user);
             int count =
                     userMapper.updateByPrimaryKeySelective(UserConverter.Userconvert2UserDo(user));
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户信息更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户信息更新失败");
         } catch (Exception e2) {
             LOGGER.error("用户信息更新失败，userId={},errCode={}", user.getUserId(),
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户信息更新失败");
         }
     }
 
     @Override
-    public Result delete(Long userId) {
+    public void delete(Long userId) {
         try {
             int count = userMapper.deleteByPrimaryKey(userId);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户信息删除失败，userId={},errCode={}", userId,
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户信息删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户信息删除失败，userId={},errCode={}", userId,
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户信息删除失败");
         } catch (Exception e2) {
             LOGGER.error("用户信息删除失败，userId={},errCode={}", userId,
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户信息删除失败");
         }
     }
 
@@ -136,21 +117,22 @@ public class UserRepositoryImpl implements UserRepository {
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(User user) {
-        return Validator.notNull(user) && Validator.notNull(user.getUserId());
+    private void preCheck(User user) {
+        Validator.notNull(user);
+        Validator.notNull(user.getUserId());
     }
 
     @Override
-    public Result<User> getByOpenId(String openId) {
+    public User getByOpenId(String openId) {
         try {
             User user = UserConverter.UserDoconvert2User(extUserMapper.selectByOpenId(openId));
-            return ResultUtil.buildSuccessResult(user);
+            return user;
         } catch (DataAccessException e1) {
             LOGGER.error("用户信息查询失败，openId={},errCode={}", openId, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户信息查询失败");
         } catch (Exception e2) {
             LOGGER.error("用户信息查询失败，openId={},errCode={}", openId, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户信息查询失败");
         }
     }
 }

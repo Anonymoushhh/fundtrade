@@ -33,4 +33,10 @@
     for update
   </select>
 
+  <select id="selectByOrderId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from payment
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
 </mapper>

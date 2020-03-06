@@ -1,5 +1,9 @@
 package com.sdu.fund.core.model.trade.bo;
 
+import com.sdu.fund.common.utils.IntervalUtil;
+
+import java.math.BigDecimal;
+
 /**
  * @program: fundproduct
  * @description:
@@ -16,6 +20,14 @@ public class Rate {
 
     /* 费率*/
     private String rate;
+
+    public boolean inApplicableAmountScope(String amount){
+        return IntervalUtil.isInTheInterval(amount,this.getApplicableAmount());
+    }
+
+    public boolean inApplicableTimeScope(BigDecimal amount){
+        return false;
+    }
 
     public String getApplicableAmount() {
         return applicableAmount;

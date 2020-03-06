@@ -5,8 +5,6 @@
 
 <generatorConfiguration>
     <properties resource="datasource.properties" />
-    <!-- mysql-connector-java-5.1.46.jar的绝对路径 -->
-    <classPathEntry location="C:\Users\Anonymous\.m2\repository\mysql\mysql-connector-java\5.1.46\mysql-connector-java-5.1.46.jar" />
 
     <context id="fund" targetRuntime="MyBatis3">
 
@@ -51,7 +49,7 @@
 
 
         <!-- 列出要生成代码的所有表，这里配置的是不生成Example文件 -->
-        <table tableName="fundArchive" domainObjectName="FundArchiveDo" mapperName="FundArchiveMapper"
+        <table tableName="fund_archive" domainObjectName="FundArchiveDo" mapperName="FundArchiveMapper"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>
@@ -81,7 +79,7 @@
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>
         </table>
-        <table tableName="hold_positions" domainObjectName="HoldPositionsDo" mapperName="HoldPositionsMapper"
+        <table tableName="hold_positions" domainObjectName="HoldPositionDo" mapperName="HoldPositionsMapper"
                enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false" >
             <property name="useActualColumnNames" value="false"/>

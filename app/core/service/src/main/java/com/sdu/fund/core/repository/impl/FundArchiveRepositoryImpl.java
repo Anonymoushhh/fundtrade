@@ -3,6 +3,7 @@ package com.sdu.fund.core.repository.impl;
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundArchiveMapper;
 import com.sdu.fund.common.dal.mapper.FundManagerMapper;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
@@ -31,103 +32,86 @@ public class FundArchiveRepositoryImpl implements FundArchiveRepository {
     private FundManagerMapper fundManagerMapper;
 
     @Override
-    public Result<FundArchive> get(String fundCode) {
+    public FundArchive get(String fundCode) {
         Validator.notNull(fundCode);
         try {
             FundArchive fundArchive =
                     FundArchiveConverter.FundArchiveDoconvert2FundArchive(fundArchiveMapper.selectByPrimaryKey(fundCode));
-            return ResultUtil.buildSuccessResult(fundArchive);
+            return fundArchive;
         } catch (DataAccessException e1) {
             LOGGER.error("基金档案信息查询失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金档案信息查询失败");
         } catch (Exception e2) {
             LOGGER.error("基金档案信息查询失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金档案信息查询失败");
         }
     }
 
     @Override
-    public Result add(FundArchive fundArchive) {
-        // 预校验
-        boolean check = preCheck(fundArchive);
-        if (!check) {
-            LOGGER.error("基金档案信息插入失败，fundCode={},errCode={}", fundArchive.getFundCode(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(FundArchive fundArchive) {
         try {
-            int id = fundArchiveMapper.insertSelective(FundArchiveConverter.FundArchiveconvert2FundArchiveDo(fundArchive));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
-                LOGGER.error("基金档案信息插入失败，fundode={},errCode={}", fundArchive.getFundCode(),
+            // 预校验
+            preCheck(fundArchive);
+            int id =
+                    fundArchiveMapper.insertSelective(FundArchiveConverter.FundArchiveconvert2FundArchiveDo(fundArchive));
+            if (id <= 0) {
+                LOGGER.error("基金档案信息插入失败，fundCode={},errCode={}", fundArchive.getFundCode(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金档案信息插入失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金档案信息插入失败，fundCode={},errCode={},msg={}", fundArchive.getFundCode(),
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金档案信息插入失败");
         } catch (Exception e2) {
             LOGGER.error("基金档案信息插入失败，fundCode={},errCode={},msg={}", fundArchive.getFundCode(),
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金档案信息插入失败");
         }
     }
 
     @Override
-    public Result update(FundArchive fundArchive) {
-        // 预校验
-        boolean check = preCheck(fundArchive);
-        if (!check) {
-            LOGGER.error("基金档案信息更新失败，fundCode={},errCode={}", fundArchive.getFundCode(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(FundArchive fundArchive) {
         try {
+            // 预校验
+            preCheck(fundArchive);
             int id =
                     fundArchiveMapper.updateByPrimaryKeySelective(FundArchiveConverter.FundArchiveconvert2FundArchiveDo(fundArchive));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("基金档案信息更新失败，fundCode={},errCode={}", fundArchive.getFundCode(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金档案信息更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金档案信息更新失败，fundCode={},errCode={},msg={}", fundArchive.getFundCode(),
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金档案信息更新失败");
         } catch (Exception e2) {
             LOGGER.error("基金档案信息更新失败，fundCode={},errCode={},msg={}", fundArchive.getFundCode(),
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金档案信息更新失败");
         }
     }
 
     @Override
-    public Result delete(String fundCode) {
+    public void delete(String fundCode) {
         try {
             int count = fundArchiveMapper.deleteByPrimaryKey(fundCode);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("基金档案信息删除失败，fundCode={},errCode={}", fundCode,
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金档案信息删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金档案信息删除失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金档案信息删除失败");
         } catch (Exception e2) {
             LOGGER.error("基金档案信息删除失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金档案信息删除失败");
         }
     }
 
@@ -138,7 +122,8 @@ public class FundArchiveRepositoryImpl implements FundArchiveRepository {
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(FundArchive fundArchive) {
-        return Validator.notNull(fundArchive) && Validator.notNull(fundArchive.getFundCode());
+    private void preCheck(FundArchive fundArchive) {
+        Validator.notNull(fundArchive);
+        Validator.notNull(fundArchive.getFundCode());
     }
 }

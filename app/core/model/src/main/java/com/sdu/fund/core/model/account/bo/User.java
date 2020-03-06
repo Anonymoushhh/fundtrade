@@ -143,7 +143,6 @@ public class User {
         return null;
     }
 
-
     public static void main(String[] args) throws Exception {
 //        User user = new User();
 //        user.setUserId(1l);

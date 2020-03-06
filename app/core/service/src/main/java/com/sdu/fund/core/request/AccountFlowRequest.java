@@ -20,9 +20,6 @@ public class AccountFlowRequest {
     private UserAccountChangeDirectionEnum changeDirection;
     private UserAccountFlowTypeEnum type;
     private FlowInitiatorEnum initiator;
-    private BigDecimal preTotolAmount;
-    private BigDecimal preAvailAmount;
-    private BigDecimal preFreezeAmount;
     private BigDecimal freezeAmount;
 
     public Payment getPayment() {
@@ -63,30 +60,6 @@ public class AccountFlowRequest {
 
     public void setInitiator(FlowInitiatorEnum initiator) {
         this.initiator = initiator;
-    }
-
-    public BigDecimal getPreTotolAmount() {
-        return preTotolAmount;
-    }
-
-    public void setPreTotolAmount(BigDecimal preTotolAmount) {
-        this.preTotolAmount = preTotolAmount;
-    }
-
-    public BigDecimal getPreAvailAmount() {
-        return preAvailAmount;
-    }
-
-    public void setPreAvailAmount(BigDecimal preAvailAmount) {
-        this.preAvailAmount = preAvailAmount;
-    }
-
-    public BigDecimal getPreFreezeAmount() {
-        return preFreezeAmount;
-    }
-
-    public void setPreFreezeAmount(BigDecimal preFreezeAmount) {
-        this.preFreezeAmount = preFreezeAmount;
     }
 
     public BigDecimal getFreezeAmount() {

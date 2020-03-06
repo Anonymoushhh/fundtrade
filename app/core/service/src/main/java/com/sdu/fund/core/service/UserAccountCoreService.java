@@ -14,10 +14,10 @@ public interface UserAccountCoreService {
     /**
      * 出账
      */
-    public Result accountOut(AccountFlowRequest accountFlowRequest);
+    public Result accountPay(AccountFlowRequest accountFlowRequest);
 
     /**
      * 入账
      */
-    public Result accountIn();
+    public Result accountReceive();
 }

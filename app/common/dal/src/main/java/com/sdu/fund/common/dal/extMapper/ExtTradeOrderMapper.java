@@ -8,4 +8,9 @@ public interface ExtTradeOrderMapper {
      行级锁
      */
     TradeOrderDo lockByPrimaryKey(String orderId);
+
+    /**
+     通过幂等号查询订单
+     */
+    public TradeOrderDo selectByIdempotentId(String idempotentId);
 }

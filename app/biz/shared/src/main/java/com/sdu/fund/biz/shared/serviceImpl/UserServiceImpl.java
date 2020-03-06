@@ -47,28 +47,24 @@ public class UserServiceImpl implements UserService {
         // 1.获取三方平台session信息
         WeChatSessionInfo weChatSessionInfo = weChatApiService.getSessionInfo(code);
         // 2.根据用户唯一标识 OpenID查询用户信息
-        Result<User> queryOpenIdResult = userRepository.getByOpenId(weChatSessionInfo.getOpenId());
-        if (queryOpenIdResult != null && queryOpenIdResult.isSuccess()) {
-            User userExist = queryOpenIdResult.getData();
-            if (userExist != null) {
-                // 3.1查询到用户则执行登录动作
-                // 3.1.1比较用户微信信息有无更新
-                if (!user.equals(userExist, "nickName", "gender", "city", "province", "country")) {
-                    userRepository.update(user);
-                }
-                currentUser = userCoreService.login(userExist);
-            } else {
-                // 3.2未查询到用户
-                // 3.2.1绑定用户openId
-                user.setOpenId(weChatSessionInfo.getOpenId());
-                // 3.2.2执行注册动作
-                User registeredUser = userCoreService.register(user);
-                currentUser = userCoreService.login(registeredUser);
+        User existUser = userRepository.getByOpenId(weChatSessionInfo.getOpenId());
+        if (existUser != null) {
+            // 3.1查询到用户则执行登录动作
+            // 3.1.1比较用户微信信息有无更新
+            if (!user.equals(existUser, "nickName", "gender", "city", "province", "country")) {
+                user.setUserId(existUser.getUserId());
+                userRepository.update(user);
             }
+            currentUser = userCoreService.login(existUser);
         } else {
-            LOGGER.error("#用户登录#信息查询失败,nickName={},openId={}", user.getNickName(), weChatSessionInfo.getOpenId());
-            throw new CommonException("用户登录信息查询失败");
+            // 3.2未查询到用户
+            // 3.2.1绑定用户openId
+            user.setOpenId(weChatSessionInfo.getOpenId());
+            // 3.2.2执行注册动作
+            User registeredUser = userCoreService.register(user);
+            currentUser = userCoreService.login(registeredUser);
         }
+
         // 4.生成并存储token
         UserToken userToken = new UserToken();
         Validator.notNull(currentUser.getUserId());
@@ -76,11 +72,7 @@ public class UserServiceImpl implements UserService {
         // appId按道理应该前端传过来，目前只有一个端，暂时写死
         userToken.setAppId(WeChatAppInfo.APP_ID);
         userToken.init(user.getOpenId(), user.getUserId());
-        Result addUserTokenResult = userTokenRepository.add(userToken);
-        if (addUserTokenResult != null && addUserTokenResult.isSuccess()) {
-            return new UserLoginVO(currentUser.getUserId(), userToken.getToken(), currentUser.getAuthority().getCode());
-        }
-        LOGGER.error("#用户登录#失败,nickName={},openId={}", user.getNickName(), weChatSessionInfo.getOpenId());
-        throw new CommonException("用户登录失败");
+        userTokenRepository.add(userToken);
+        return new UserLoginVO(currentUser.getUserId(), userToken.getToken(), currentUser.getAuthority().getCode());
     }
 }

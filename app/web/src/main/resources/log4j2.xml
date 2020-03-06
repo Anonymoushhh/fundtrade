@@ -5,7 +5,7 @@
 <Configuration status="info" monitorInterval="300">
     <Properties>
         <!-- log输出位置 -->
-        <Property name="log_base_dir">${sys:catalina.home}/logs/fundtrade</Property>
+        <Property name="log_base_dir">./logs/fundtrade</Property>
         <!-- log输出格式 -->
         <Property name="log_pattern">%d{yyyy-MM-dd HH:mm:ss:SSS} [%t] %p %C:%L - %m%n</Property>
         <!-- 单个日志文件大小 50MB-->
@@ -17,7 +17,7 @@
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <!-- 控制台只记录debug及以上级别日志，其他拒绝 -->
-            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${log_pattern}"/>
         </Console>
         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面，每天的日志压缩存档-->

@@ -6,12 +6,27 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
             http://sofastack.io/schema/sofaboot http://sofastack.io/schema/sofaboot.xsd"
        default-autowire="byName">
+    <bean id="userQueryService" class="com.sdu.fund.biz.shared.query.serviceImpl.UserQueryServiceImpl"/>
+    <sofa:service ref="userQueryService" interface="com.sdu.fund.biz.shared.query.service.UserQueryService">
+        <sofa:binding.jvm/>
+    </sofa:service>
     <bean id="userService" class="com.sdu.fund.biz.shared.serviceImpl.UserServiceImpl"/>
     <sofa:service ref="userService" interface="com.sdu.fund.biz.shared.service.UserService">
         <sofa:binding.jvm/>
     </sofa:service>
     <bean id="purchaseService" class="com.sdu.fund.biz.shared.serviceImpl.PurchaseServiceImpl"/>
     <sofa:service ref="purchaseService" interface="com.sdu.fund.biz.shared.service.PurchaseService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+    <bean id="holdPositionQueryService" class="com.sdu.fund.biz.shared.query.serviceImpl.HoldPositionQueryServiceImpl"/>
+    <sofa:service ref="holdPositionQueryService" interface="com.sdu.fund.biz.shared.query.service.HoldPositionQueryService">
+        <sofa:binding.jvm/>
+    </sofa:service>
+
+    <bean id="orderCreateFactory" class="com.sdu.fund.biz.shared.factory.OrderCreateFactory"/>
+
+    <bean id="userContext" class="com.sdu.fund.biz.shared.context.UserContext"/>
+    <sofa:service ref="userContext" interface="com.sdu.fund.biz.shared.context.UserContext">
         <sofa:binding.jvm/>
     </sofa:service>
 </beans>

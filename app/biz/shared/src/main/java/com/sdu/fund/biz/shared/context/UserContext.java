@@ -1,4 +1,4 @@
-package com.sdu.fund.biz.shared.holder;
+package com.sdu.fund.biz.shared.context;
 
 import com.sdu.fund.core.model.account.bo.User;
 import org.springframework.stereotype.Component;

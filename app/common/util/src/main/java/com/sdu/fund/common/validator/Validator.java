@@ -20,8 +20,9 @@ public final class Validator {
      *
      * @param obj object to test
      */
-    public static boolean notNull(Object obj) {
-        return obj != null;
+    public static void notNull(Object obj) {
+        if (obj == null)
+            throw new CommonException();
     }
 
     /**

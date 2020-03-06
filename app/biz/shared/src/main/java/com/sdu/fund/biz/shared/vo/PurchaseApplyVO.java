@@ -19,7 +19,14 @@ public class PurchaseApplyVO {
 
     private String purchaseTradeOrderType;
 
+    // 下单金额
     private String purchaseAmount;
+
+    // 费率扣的金额
+    private String feeAmount;
+
+    // 最终支付金额
+    private String realPayAmount;
 
     // 预计确认时间
     private String expectComfirmDate;
@@ -27,17 +34,20 @@ public class PurchaseApplyVO {
     // 预计查看收益时间
     private String expectProfitViewDate;
 
-    public static PurchaseApplyVO convert(TradeOrder tradeOrder){
+    public static PurchaseApplyVO convert(TradeOrder tradeOrder) {
         PurchaseApplyVO purchaseApplyVO = new PurchaseApplyVO();
-        if(tradeOrder == null){
-            return purchaseApplyVO;
+        if (tradeOrder == null) {
+            return null;
         }
-        purchaseApplyVO.setOrderId(tradeOrder.getTradeOrderId());
+        purchaseApplyVO.setOrderId(tradeOrder.getOrderId());
         purchaseApplyVO.setFundName(tradeOrder.getFundName());
-        purchaseApplyVO.setPurchaseAmount(NumberUtil.getBigDecimal_to2_is45(tradeOrder.getTradeOrderAmount()).toString());
-        purchaseApplyVO.setPurchaseTradeOrderType(tradeOrder.getTradeOrderType().getCode());
-        purchaseApplyVO.setExpectComfirmDate(DateUtil.dateToStr(tradeOrder.getPurchaseConfirmDay(),DateUtil.FMT_YMD3));
-        purchaseApplyVO.setExpectComfirmDate(purchaseApplyVO.getExpectComfirmDate());
+        purchaseApplyVO.setPurchaseAmount(NumberUtil.getBigDecimal_to2_is45(tradeOrder.getOrderAmount()).toString());
+        purchaseApplyVO.setFeeAmount(NumberUtil.getBigDecimal_to2_is45(tradeOrder.getFeeAmount()).toString());
+        purchaseApplyVO.setRealPayAmount(NumberUtil.getBigDecimal_to2_is45(tradeOrder.getRealPayAmount()).toString());
+        purchaseApplyVO.setPurchaseTradeOrderType(tradeOrder.getOrderType().getCode());
+        purchaseApplyVO.setExpectComfirmDate(DateUtil.dateToStr(tradeOrder.getPurchaseConfirmDay(), DateUtil.FMT_YMD3));
+        purchaseApplyVO.setExpectProfitViewDate(DateUtil.dateToStr(tradeOrder.getPurchaseConfirmDay(),
+                DateUtil.FMT_YMD3) + "收益更新后");
         return purchaseApplyVO;
     }
 
@@ -55,6 +65,22 @@ public class PurchaseApplyVO {
 
     public void setFundName(String fundName) {
         this.fundName = fundName;
+    }
+
+    public String getFeeAmount() {
+        return feeAmount;
+    }
+
+    public void setFeeAmount(String feeAmount) {
+        this.feeAmount = feeAmount;
+    }
+
+    public String getRealPayAmount() {
+        return realPayAmount;
+    }
+
+    public void setRealPayAmount(String realPayAmount) {
+        this.realPayAmount = realPayAmount;
     }
 
     public String getPurchaseTradeOrderType() {

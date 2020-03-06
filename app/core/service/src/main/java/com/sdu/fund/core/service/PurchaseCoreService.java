@@ -1,5 +1,6 @@
 package com.sdu.fund.core.service;
 
+import com.sdu.fund.common.result.Result;
 import com.sdu.fund.core.model.trade.bo.Payment;
 import com.sdu.fund.core.model.trade.bo.TradeOrder;
 
@@ -11,12 +12,14 @@ import com.sdu.fund.core.model.trade.bo.TradeOrder;
  **/
 public interface PurchaseCoreService {
 
-    public TradeOrder apply(TradeOrder tradeOrder);
+    public Result<TradeOrder> apply(TradeOrder tradeOrder);
 
-    public Payment pay(Payment payment);
+    public Result<Payment> pay(Payment payment);
 
-    public TradeOrder confirm(TradeOrder tradeOrder);
+    public Result<TradeOrder> payCannel(TradeOrder tradeOrder) throws Exception;
 
-    public TradeOrder cancel(TradeOrder tradeOrder);
+    public Result confirm(TradeOrder tradeOrder);
+
+    public Result cancel(TradeOrder tradeOrder);
 
 }

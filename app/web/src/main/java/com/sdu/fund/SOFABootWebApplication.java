@@ -20,16 +20,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * SOFABootWebApplication
  * <p>
  * <p>
- * Created by yangguanchao on 16/12/9.
+ * Created by Anonymous on 19/12/9.
  */
 @org.springframework.boot.autoconfigure.SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @EnableScheduling
+@EnableAsync
 public class SOFABootWebApplication {
 
     // init the logger

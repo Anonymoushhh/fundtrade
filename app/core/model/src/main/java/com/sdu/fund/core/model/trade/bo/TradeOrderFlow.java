@@ -61,11 +61,13 @@ public class TradeOrderFlow {
      */
     private Date gmtModified;
 
-    public static TradeOrderFlow createFlow(TradeOrder tradeOrder, TradeOrderFlowTypeEnum tradeOrderFlowType) {
+    public static TradeOrderFlow createFlow(String tradeOrderId, Long userId,
+                                            TradeOrderFlowTypeEnum tradeOrderFlowType,String payOrderId) {
         TradeOrderFlow tradeOrderFlow = new TradeOrderFlow();
         tradeOrderFlow.setFlowId(SnowflakeIdUtil.getInstance().nextId());
-        tradeOrderFlow.setOrderId(tradeOrder.getTradeOrderId());
-        tradeOrderFlow.setUserId(tradeOrder.getUserId());
+        tradeOrderFlow.setOrderId(tradeOrderId);
+        tradeOrderFlow.setUserId(userId);
+        tradeOrderFlow.setPayOrderId(payOrderId);
         tradeOrderFlow.setType(tradeOrderFlowType);
         switch (tradeOrderFlowType) {
             case USER_ORDER:
@@ -75,6 +77,7 @@ public class TradeOrderFlow {
             case USER_CACEL:
             case USER_DELAY_PAY:
                 tradeOrderFlow.setInitiator(FlowInitiatorEnum.USER);
+                break;
             case SYSTEM_RECEIVE_ORDER:
             case SYSTEM_CONFIRM:
             case SYSTEM_FINFISH:

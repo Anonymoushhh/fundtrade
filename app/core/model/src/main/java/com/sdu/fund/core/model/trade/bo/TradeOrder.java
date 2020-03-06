@@ -2,18 +2,16 @@ package com.sdu.fund.core.model.trade.bo;
 
 import com.sdu.fund.common.utils.DateUtil;
 import com.sdu.fund.common.utils.TradeOrderIdUtil;
-import com.sdu.fund.core.model.trade.TradeOrderExtKey;
+import com.sdu.fund.core.model.trade.constants.TradeOrderExtKey;
 import com.sdu.fund.core.model.trade.enums.TradeOrderChannelEnum;
 import com.sdu.fund.core.model.trade.enums.PayChannelEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderStatusEnum;
 import com.sdu.fund.core.model.trade.enums.TradeOrderTypeEnum;
 import com.sdu.fund.core.model.trade.event.TradeOrderEvent;
 import com.sdu.fund.core.model.trade.factory.TradeOrderStatusMachineFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @program: fundtrade
@@ -23,12 +21,17 @@ import java.util.Map;
  **/
 public class TradeOrder extends BaseOrder {
 
-    private String tradeOrderId;
+    private String orderId;
 
     /**
      *
      */
     private Long userId;
+
+    /**
+     *
+     */
+    private String idempotentId;
 
     /**
      *
@@ -43,7 +46,7 @@ public class TradeOrder extends BaseOrder {
     /**
      * 下单金额
      */
-    private BigDecimal tradeOrderAmount;
+    private BigDecimal orderAmount;
 
     /**
      * 费率扣的金额
@@ -63,17 +66,17 @@ public class TradeOrder extends BaseOrder {
     /**
      * 订单类型
      */
-    private TradeOrderTypeEnum tradeOrderType;
+    private TradeOrderTypeEnum orderType;
 
     /**
      * 订单状态
      */
-    private TradeOrderStatusEnum tradeOrderStatus;
+    private TradeOrderStatusEnum orderStatus;
 
     /**
      * 下单渠道
      */
-    private TradeOrderChannelEnum tradeOrderChannel;
+    private TradeOrderChannelEnum orderChannel;
 
     /**
      * 支付渠道
@@ -83,12 +86,12 @@ public class TradeOrder extends BaseOrder {
     /**
      * 订单份额
      */
-    private BigDecimal tradeOrderShare;
+    private BigDecimal orderShare;
 
     /**
      * 订单时间
      */
-    private Date tradeOrderTime;
+    private Date orderTime;
 
     /**
      * 支付时间
@@ -125,35 +128,40 @@ public class TradeOrder extends BaseOrder {
      */
     private Date gmtModified;
 
-
-
     /**
      * 订单状态机工厂
      */
-    @Autowired
-    private TradeOrderStatusMachineFactory tradeOrderStatusMachineFactory;
+    private TradeOrderStatusMachineFactory tradeOrderStatusMachineFactory = new TradeOrderStatusMachineFactory();
 
     /**
      * 推进订单状态
      */
-    public void pushStatus(TradeOrder tradeOrder, TradeOrderEvent tradeOrderEvent) {
-        tradeOrder.setTradeOrderStatus(
+    public void pushStatus(TradeOrderEvent tradeOrderEvent) {
+        this.setOrderStatus(
                 tradeOrderStatusMachineFactory
-                        .getStatusMachine(tradeOrder.getTradeOrderType()) // 获取状态机
-                        .getNextStatus(tradeOrder.getTradeOrderStatus(), tradeOrderEvent)); // 获取下一个状态
+                        .getStatusMachine(this.getOrderType()) // 获取状态机
+                        .getNextStatus(this.getOrderStatus(), tradeOrderEvent)); // 获取下一个状态
+    }
+
+    public static void main(String[] args) {
+        TradeOrder tradeOrder = new TradeOrder();
+        tradeOrder.setOrderType(TradeOrderTypeEnum.PURCHASE);
+        tradeOrder.setOrderStatus(TradeOrderStatusEnum.INIT);
+        tradeOrder.pushStatus(TradeOrderEvent.PAY_SUCCESS);
+        System.out.println(tradeOrder.getOrderStatus());
     }
 
     /**
      * 创建订单
      */
     public void createTradeOrder() {
-        switch (this.getTradeOrderType()) {
+        switch (this.getOrderType()) {
             case PURCHASE:
                 long now = System.currentTimeMillis();
-                this.setTradeOrderId(TradeOrderIdUtil.genTradeOrderId(this.getUserId(), now,
-                        this.getTradeOrderChannel().getCode()));
-                this.setTradeOrderTime(DateUtil.unixToDate(now));
-                this.setTradeOrderStatus(TradeOrderStatusEnum.INIT);
+                this.setOrderId(TradeOrderIdUtil.genTradeOrderId(this.getUserId(), now,
+                        this.getOrderChannel().getCode()));
+                this.setOrderTime(DateUtil.unixToDate(now));
+                this.setOrderStatus(TradeOrderStatusEnum.INIT);
                 break;
             case REDEEM:
             case FIXED:
@@ -166,6 +174,9 @@ public class TradeOrder extends BaseOrder {
     }
 
     public Date getPurchaseConfirmDay() {
+        if (extInfo.get(TradeOrderExtKey.PURCHASECONFIRMDAY) == null) {
+            return null;
+        }
         return (Date) extInfo.get(TradeOrderExtKey.PURCHASECONFIRMDAY);
     }
 
@@ -177,12 +188,20 @@ public class TradeOrder extends BaseOrder {
         this.payOrderId = payOrderId;
     }
 
-    public String getTradeOrderId() {
-        return tradeOrderId;
+    public String getIdempotentId() {
+        return idempotentId;
     }
 
-    public void setTradeOrderId(String tradeOrderId) {
-        this.tradeOrderId = tradeOrderId;
+    public void setIdempotentId(String idempotentId) {
+        this.idempotentId = idempotentId;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public Long getUserId() {
@@ -209,12 +228,12 @@ public class TradeOrder extends BaseOrder {
         this.fundName = fundName;
     }
 
-    public BigDecimal getTradeOrderAmount() {
-        return tradeOrderAmount;
+    public BigDecimal getOrderAmount() {
+        return orderAmount;
     }
 
-    public void setTradeOrderAmount(BigDecimal tradeOrderAmount) {
-        this.tradeOrderAmount = tradeOrderAmount;
+    public void setOrderAmount(BigDecimal orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
     public BigDecimal getFee() {
@@ -241,20 +260,20 @@ public class TradeOrder extends BaseOrder {
         this.realPayAmount = realPayAmount;
     }
 
-    public TradeOrderTypeEnum getTradeOrderType() {
-        return tradeOrderType;
+    public TradeOrderTypeEnum getOrderType() {
+        return orderType;
     }
 
-    public void setTradeOrderType(TradeOrderTypeEnum tradeOrderType) {
-        this.tradeOrderType = tradeOrderType;
+    public void setOrderType(TradeOrderTypeEnum orderType) {
+        this.orderType = orderType;
     }
 
-    public TradeOrderChannelEnum getTradeOrderChannel() {
-        return tradeOrderChannel;
+    public TradeOrderChannelEnum getOrderChannel() {
+        return orderChannel;
     }
 
-    public void setTradeOrderChannel(TradeOrderChannelEnum tradeOrderChannel) {
-        this.tradeOrderChannel = tradeOrderChannel;
+    public void setOrderChannel(TradeOrderChannelEnum orderChannel) {
+        this.orderChannel = orderChannel;
     }
 
     public PayChannelEnum getPayChannel() {
@@ -265,28 +284,28 @@ public class TradeOrder extends BaseOrder {
         this.payChannel = payChannel;
     }
 
-    public TradeOrderStatusEnum getTradeOrderStatus() {
-        return tradeOrderStatus;
+    public TradeOrderStatusEnum getOrderStatus() {
+        return orderStatus;
     }
 
-    public void setTradeOrderStatus(TradeOrderStatusEnum tradeOrderStatus) {
-        this.tradeOrderStatus = tradeOrderStatus;
+    public void setOrderStatus(TradeOrderStatusEnum orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
-    public BigDecimal getTradeOrderShare() {
-        return tradeOrderShare;
+    public BigDecimal getOrderShare() {
+        return orderShare;
     }
 
-    public void setTradeOrderShare(BigDecimal tradeOrderShare) {
-        this.tradeOrderShare = tradeOrderShare;
+    public void setOrderShare(BigDecimal orderShare) {
+        this.orderShare = orderShare;
     }
 
-    public Date getTradeOrderTime() {
-        return tradeOrderTime;
+    public Date getOrderTime() {
+        return orderTime;
     }
 
-    public void setTradeOrderTime(Date tradeOrderTime) {
-        this.tradeOrderTime = tradeOrderTime;
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
     }
 
     public Date getPayTime() {

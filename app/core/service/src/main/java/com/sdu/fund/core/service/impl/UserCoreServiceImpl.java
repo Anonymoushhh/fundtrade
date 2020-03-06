@@ -4,13 +4,18 @@ import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.SnowflakeIdUtil;
 import com.sdu.fund.core.model.account.bo.User;
+import com.sdu.fund.core.model.account.bo.UserAccount;
 import com.sdu.fund.core.model.account.enums.AuthorityEnum;
 import com.sdu.fund.core.model.account.enums.UserStatusEnum;
+import com.sdu.fund.core.repository.UserAccountRepository;
 import com.sdu.fund.core.repository.UserRepository;
 import com.sdu.fund.core.service.UserCoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 
 public class UserCoreServiceImpl implements UserCoreService {
 
@@ -18,6 +23,12 @@ public class UserCoreServiceImpl implements UserCoreService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserAccountRepository userAccountRepository;
+
+    @Autowired
+    private TransactionTemplate transactionTemplate;
 
     @Override
     public User login(User user) {
@@ -33,12 +44,17 @@ public class UserCoreServiceImpl implements UserCoreService {
         user.setAuthority(AuthorityEnum.CONSUMER);
         // 设置用户状态为合法
         user.setStatus(UserStatusEnum.VALID);
-        Result result = userRepository.add(user);
-        if(result!=null&&result.isSuccess()){
-            return user;
-        }else{
-            // 这个异常不能丢，要抛给业务层处理
-            throw new CommonException("用户注册失败");
-        }
+
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+                // 初始化用户和账户
+                userRepository.add(user);
+                UserAccount userAccount = UserAccount.initUserAccount(user.getUserId());
+                userAccountRepository.add(userAccount);
+            }
+        });
+
+        return user;
     }
 }

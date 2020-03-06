@@ -32,9 +32,9 @@ public class ResultCode {
     /* 全部失败*/
     public static final int  FAILURE = 7;
 
-    /* 未登录*/
-    public static final int  NO_LOGIN = 8;
-
     /* 系统异常*/
-    public static final int  SYSTEM_EXCEPTION = 9;
+    public static final int  SYSTEM_EXCEPTION = 8;
+
+    /* 订单已支付或取消*/
+    public static final int  ORDER_PAID_OR_CANNCELED = 9;
 }

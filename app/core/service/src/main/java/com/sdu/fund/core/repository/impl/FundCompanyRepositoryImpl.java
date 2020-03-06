@@ -2,6 +2,7 @@ package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundCompanyMapper;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
@@ -28,101 +29,82 @@ public class FundCompanyRepositoryImpl implements FundCompanyRepository {
     private FundCompanyMapper fundCompanyMapper;
 
     @Override
-    public Result<FundCompany> get(String fundCompanyCode) {
+    public FundCompany get(String fundCompanyCode) {
         Validator.notNull(fundCompanyCode);
         try {
             FundCompany fundCompany =
                     FundCompanyConverter.FundCompanyDoconvert2FundCompany(fundCompanyMapper.selectByPrimaryKey(fundCompanyCode));
-            return ResultUtil.buildSuccessResult(fundCompany);
+            return fundCompany;
         } catch (DataAccessException e1) {
             LOGGER.error("基金公司信息查询失败，fundCompanyCode={},errCode={}", fundCompanyCode, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金公司信息查询失败");
         } catch (Exception e2) {
             LOGGER.error("基金公司信息查询失败，fundCompanyCode={},errCode={}", fundCompanyCode, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金公司信息查询失败");
         }
     }
 
     @Override
-    public Result add(FundCompany fundCompany) {
-        // 预校验
-        boolean check = preCheck(fundCompany);
-        if (!check) {
-            LOGGER.error("基金公司信息插入失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(FundCompany fundCompany) {
         try {
-            int id = fundCompanyMapper.insertSelective(FundCompanyConverter.FundCompanyconvert2FundCompanyDo(fundCompany));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            preCheck(fundCompany);
+            int id =
+                    fundCompanyMapper.insertSelective(FundCompanyConverter.FundCompanyconvert2FundCompanyDo(fundCompany));
+            if (id <= 0) {
                 LOGGER.error("基金公司信息插入失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                    ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                        ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金公司信息插入失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金公司信息插入失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                    ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金公司信息插入失败");
         } catch (Exception e2) {
             LOGGER.error("基金公司信息插入失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+                    ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金公司信息插入失败");
         }
     }
 
     @Override
-    public Result update(FundCompany fundCompany) {
-        // 预校验
-        boolean check = preCheck(fundCompany);
-        if (!check) {
-            LOGGER.error("基金公司信息更新失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(FundCompany fundCompany) {
         try {
+            preCheck(fundCompany);
             int count =
-                fundCompanyMapper.updateByPrimaryKeySelective(FundCompanyConverter.FundCompanyconvert2FundCompanyDo(fundCompany));
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+                    fundCompanyMapper.updateByPrimaryKeySelective(FundCompanyConverter.FundCompanyconvert2FundCompanyDo(fundCompany));
+            if (count <= 0) {
                 LOGGER.error("基金公司信息更新失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                    ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                        ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金公司信息更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金公司信息更新失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                    ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金公司信息更新失败");
         } catch (Exception e2) {
             LOGGER.error("基金公司信息更新失败，fundCompanyCode={},errCode={}", fundCompany.getFundCompanyCode(),
-                ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+                    ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金公司信息更新失败");
         }
     }
 
     @Override
-    public Result delete(String fundCompanyCode) {
+    public void delete(String fundCompanyCode) {
         try {
             int count = fundCompanyMapper.deleteByPrimaryKey(fundCompanyCode);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("基金公司信息删除失败，fundCompanyCode={},errCode={}", fundCompanyCode,
-                    ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                        ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金公司信息删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金公司信息删除失败，fundCompanyCode={},errCode={}", fundCompanyCode,
-                ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                    ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金公司信息删除失败");
         } catch (Exception e2) {
             LOGGER.error("基金公司信息删除失败，fundCompanyCode={},errCode={}", fundCompanyCode,
-                ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+                    ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金公司信息删除失败");
         }
     }
 
@@ -133,7 +115,8 @@ public class FundCompanyRepositoryImpl implements FundCompanyRepository {
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(FundCompany fundCompany) {
-        return Validator.notNull(fundCompany) && Validator.notNull(fundCompany.getFundCompanyCode());
+    private void preCheck(FundCompany fundCompany) {
+        Validator.notNull(fundCompany);
+        Validator.notNull(fundCompany.getFundCompanyCode());
     }
 }

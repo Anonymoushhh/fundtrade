@@ -13,15 +13,24 @@ import java.text.DecimalFormat;
 public class NumberUtil {
 
     /**
-     *
-     * @Description：7*0.01*100/100 保留四位小数,截取4位
+     * 不四舍五入格式化
+     */
+    public static String getBigDecimal_to2_no45Format(BigDecimal num) {
+        BigDecimal temp = getBigDecimal_to2_no45(num);
+        if (temp.compareTo(new BigDecimal(0)) > 0) {
+            return "+" + temp.toString();
+        }
+        return temp.toString();
+    }
+
+    /**
+     * @Description：7*0.01*100/100 保留四位小数, 截取4位
      * @Date：2019/1/17 下午4:49
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
-    public static double getDouble_toNum_no4no5(double number,int num){
+    public static double getDouble_toNum_no4no5(double number, int num) {
         // setScale(1)表示保留一位小数，默认用四舍五入方式
         // setScale(1,BigDecimal.ROUND_DOWN)直接删除多余的小数位，如2.35会变成2.3
         // num 代表保留几位小数
@@ -29,89 +38,82 @@ public class NumberUtil {
     }
 
     /**
-     *
      * @Description：setScale(1,BigDecimal.ROUND_UP)进位处理，不管后为是1还是6，都进1
      * @Date：2019/1/17 下午4:59
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
-    public static double getDouble_toNum_isincr(double number,int num){
+    public static double getDouble_toNum_isincr(double number, int num) {
         return new BigDecimal(number).setScale(num, BigDecimal.ROUND_UP).doubleValue();
     }
 
     /**
-     *
      * @Description：正常四舍五入
      * @Date：2019/1/28 下午5:37
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
-    public static double getDouble_toNum_is45(double number,int num){
+    public static double getDouble_toNum_is45(double number, int num) {
         return new BigDecimal(number).setScale(num, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 
 
     /**
-     *
      * @Description：获取两个整数的double值 isNpoint：保留很多小数点
      * @Date：2019/1/24 上午9:54
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
-    public static double getDouble_division_isNpoint(int num1,int num2){
-        double result = num1*0.01*100/num2;
+    public static double getDouble_division_isNpoint(int num1, int num2) {
+        double result = num1 * 0.01 * 100 / num2;
         return result;
     }
 
     /**
-     *
      * @Description：两外一种方法，和上面方式不同，截取两位小数
      * @Date：2019/1/24 上午10:03
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
-    public static double getDouble_to2_no4no5(double num){
+    public static double getDouble_to2_no4no5(double num) {
         DecimalFormat df = new DecimalFormat("#0.##");
         df.setRoundingMode(RoundingMode.FLOOR);
         return Double.parseDouble(df.format(num));
     }
 
-    public static BigDecimal getBigDecimal_to2_is45(BigDecimal num){
-        num.setScale(2, BigDecimal.ROUND_HALF_UP);
-        return num;
+    /**
+     * 四舍五入
+     */
+    public static BigDecimal getBigDecimal_to2_is45(BigDecimal num) {
+        return num.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
+    public static BigDecimal getBigDecimal_to2_no45(BigDecimal num) {
+        return num.setScale(2, BigDecimal.ROUND_FLOOR);
+    }
 
     /**
-     *
      * @Description：//四舍五入转换成整数
      * @Date：2019/1/24 上午10:18
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
-    public static int getInteger(double num){
+    public static int getInteger(double num) {
         DecimalFormat df2 = new DecimalFormat("######0");
         return Integer.parseInt(df2.format(num));
     }
 
     /**
-     *
      * @Description：提供精确的加法运算
      * @Date：2019/1/28 上午10:38
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
     public static double add_2_double(double v1, double v2) {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -120,13 +122,11 @@ public class NumberUtil {
     }
 
     /**
-     *
      * @Description：提供精确的减法运算
      * @Date：2019/1/28 上午10:39
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
     public static double substract_2_double(double v1, double v2) {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -135,13 +135,11 @@ public class NumberUtil {
     }
 
     /**
-     *
      * @Description：提供精确的乘法运算
      * @Date：2019/1/28 上午10:40
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
     public static double multiply(double v1, double v2) {
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
@@ -150,26 +148,22 @@ public class NumberUtil {
     }
 
     /**
-     *
      * @Description：提供（相对）精确的除法运算,当发生除不尽的情况时,精确到小数点以后10位,以后的数字四舍五入.
      * @Date：2019/1/28 上午10:40
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
     public static double divide(double v1, double v2) {
         return divide(v1, v2, 10);
     }
 
     /**
-     *
-     * @Description：提供（相对）精确的除法运算.当发生除不尽的情况时,由scale参数指 定精度,以后的数字四舍五入
+     * @Description：提供（相对）精确的除法运算.当发生除不尽的情况时,由scale参数指 定精度, 以后的数字四舍五入
      * @Date：2019/1/28 上午10:41
      * @Author：ChengJian
      * @UpdateRemark:
      * @Version:1.0
-     *
      */
 
     public static double divide(double v1, double v2, int scale) {
@@ -183,7 +177,10 @@ public class NumberUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getDouble_toNum_is45(2.1323,0));
+        System.out.println(getDouble_toNum_is45(2.1323, 0));
+        System.out.println(getBigDecimal_to2_is45(new BigDecimal("2.1353")));
+        System.out.println(getBigDecimal_to2_no45(new BigDecimal("2.1323")));
+        BigDecimal r = new BigDecimal("0.15");
     }
 
 }

@@ -2,8 +2,10 @@ package com.sdu.fund.biz.shared.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.sofa.runtime.api.annotation.SofaReference;
-import com.sdu.fund.biz.shared.holder.UserContext;
+import com.sdu.fund.biz.shared.context.UserContext;
+import com.sdu.fund.biz.shared.enums.CodeEnum;
 import com.sdu.fund.biz.shared.query.service.UserQueryService;
+import com.sdu.fund.biz.shared.vo.Response;
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.core.model.account.bo.User;
@@ -32,8 +34,13 @@ public class UserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String token = request.getHeader("token");
-        User currentUser = userQueryService.queryLoginUser(token);
-        LOG.info("UserInterceptor token:{} user:{}", token, JSON.toJSONString(currentUser));
+        User currentUser = null;
+        try {
+            currentUser = userQueryService.queryLoginUser(token);
+            LOG.info("UserInterceptor token:{} user:{}", token, JSON.toJSONString(currentUser));
+        }catch (Exception e){
+            LOG.error("根据token查询用户失败,token:{}", token);
+        }
 
         if (currentUser == null) {
             sendNoLoginMsg(response);
@@ -56,7 +63,7 @@ public class UserInterceptor implements HandlerInterceptor {
     }
 
     private void sendNoLoginMsg(HttpServletResponse response) throws Exception {
-        String rltJson = JSON.toJSONString(ResultUtil.buildFailedResult(ResultCode.NO_LOGIN));
+        String rltJson = JSON.toJSONString(Response.buildErrorResponse(CodeEnum.NO_LOGIN.getCode()));
         response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-type", "text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();

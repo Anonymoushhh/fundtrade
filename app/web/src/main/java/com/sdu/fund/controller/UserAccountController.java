@@ -22,7 +22,7 @@ import com.sdu.fund.biz.shared.vo.UserLoginVO;
 import com.sdu.fund.core.model.account.bo.User;
 import com.sdu.fund.core.model.account.enums.GenderEnum;
 import com.sdu.fund.biz.shared.request.WeChatLoginRequest;
-import com.sdu.fund.vo.Response;
+import com.sdu.fund.biz.shared.vo.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2.5.8
  */
 @RestController
-@RequestMapping("/fundTrade/userAccount")
+@RequestMapping("/fundTrade/user")
 public class UserAccountController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserAccountController.class);

@@ -7,6 +7,7 @@ import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.result.Result;
 import com.sdu.fund.common.utils.ResultUtil;
 import com.sdu.fund.common.validator.Validator;
+import com.sdu.fund.core.converter.TradeOrderConverter;
 import com.sdu.fund.core.converter.UserAccountConverter;
 import com.sdu.fund.core.model.account.bo.UserAccount;
 import com.sdu.fund.core.repository.UserAccountRepository;
@@ -20,7 +21,7 @@ import java.math.BigDecimal;
 
 /**
  * @program: fundproduct
- * @description: 登录token仓储层
+ * @description: 用户账户仓储层
  * @author: anonymous
  * @create: 2019-11-28 23:21
  **/
@@ -36,102 +37,82 @@ public class UserAccountRepositoryImpl implements UserAccountRepository {
 
 
     @Override
-    public Result<UserAccount> get(Long userId) {
+    public UserAccount get(Long userId) {
         Validator.notNull(userId);
         try {
             UserAccount userAccount =
                     UserAccountConverter.UserAccountDoconvert2UserAccount(userAccountMapper.selectByPrimaryKey(userId));
-            return ResultUtil.buildSuccessResult(userAccount);
+            return userAccount;
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户查询失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户插入失败");
         } catch (Exception e2) {
             LOGGER.error("用户账户查询失败，userId={},errCode={}", userId, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户插入失败");
         }
     }
 
     @Override
-    public Result add(UserAccount userAccount) {
-        // 预校验
-        boolean check = preCheck(userAccount);
-        if (!check) {
-            LOGGER.error("用户账户插入失败，userId={},errCode={}", userAccount.getUserId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(UserAccount userAccount) {
         try {
+            preCheck(userAccount);
             int id =
                     userAccountMapper.insertSelective(UserAccountConverter.UserAccountconvert2UserAccountDo(userAccount));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("用户账户插入失败，userId={},errCode={}", userAccount.getUserId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户插入失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户插入失败，userId={},errCode={}", userAccount.getUserId(),
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户插入失败");
         } catch (Exception e2) {
             LOGGER.error("用户账户插入失败，userId={},errCode={}", userAccount.getUserId(),
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户插入失败");
         }
     }
 
     @Override
-    public Result update(UserAccount userAccount) {
-        // 预校验
-        boolean check = preCheck(userAccount);
-        if (!check) {
-            LOGGER.error("用户账户更新失败，userId={},errCode={}", userAccount.getUserId(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(UserAccount userAccount) {
         try {
+            preCheck(userAccount);
             int count =
                     userAccountMapper.updateByPrimaryKeySelective(UserAccountConverter.UserAccountconvert2UserAccountDo(userAccount));
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户账户更新失败，userId={},errCode={}", userAccount.getUserId(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户更新失败，userId={},errCode={}", userAccount.getUserId(),
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户更新失败");
         } catch (Exception e2) {
             LOGGER.error("用户账户更新失败，userId={},errCode={}", userAccount.getUserId(),
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户更新失败");
         }
     }
 
     @Override
-    public Result delete(Long userId) {
+    public void delete(Long userId) {
         try {
             int count = userAccountMapper.deleteByPrimaryKey(userId);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("用户账户删除失败，userId={},errCode={}", userId,
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户删除失败，userId={},errCode={}", userId,
                     ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户删除失败");
         } catch (Exception e2) {
             LOGGER.error("用户账户删除失败，userId={},errCode={}", userId,
                     ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户删除失败");
         }
     }
 
@@ -142,28 +123,50 @@ public class UserAccountRepositoryImpl implements UserAccountRepository {
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(UserAccount userAccount) {
-        return Validator.notNull(userAccount) && Validator.notNull(userAccount.getUserId());
+    private void preCheck(UserAccount userAccount) {
+        Validator.notNull(userAccount);
+        Validator.notNull(userAccount.getUserId());
     }
 
     @Override
-    public Result accountIn(Long userId, BigDecimal amount, BigDecimal freezeAmount) {
+    public UserAccount lock(Long userId) {
+        Validator.notNull(userId);
         try {
-            extUserAccountMapper.accountIn(userId, amount, freezeAmount);
-            return ResultUtil.buildSuccessResult();
+            return UserAccountConverter.UserAccountDoconvert2UserAccount(extUserAccountMapper.lockByPrimaryKey(userId));
         } catch (DataAccessException e1) {
-            LOGGER.error("用户账户入账失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            LOGGER.error("账户锁定失败，userId={},errCode={},msg={}", userId, ResultCode.DATABASE_EXCEPTION, e1.getMessage());
+            throw new CommonException("账户锁定失败");
         } catch (Exception e2) {
-            LOGGER.error("用户账户入账失败，userId={},errCode={}", userId, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            LOGGER.error("账户锁定失败，userId={},errCode={},msg={}", userId, ResultCode.SERVER_EXCEPTION, e2.getMessage());
+            throw new CommonException("账户锁定失败");
         }
     }
 
     @Override
-    public Result accountOut(Long userId, BigDecimal amount) {
+    public void accountIn(Long userId, BigDecimal amount, BigDecimal freezeAmount) {
         try {
-            extUserAccountMapper.accountOut(userId, amount);
+            int count = extUserAccountMapper.accountIn(userId, amount, freezeAmount);
+            if (count <= 0) {
+                LOGGER.error("用户账户入账失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户入账失败");
+            }
+        } catch (DataAccessException e1) {
+            LOGGER.error("用户账户入账失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("用户账户入账失败");
+        } catch (Exception e2) {
+            LOGGER.error("用户账户入账失败，userId={},errCode={}", userId, ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("用户账户入账失败");
+        }
+    }
+
+    @Override
+    public void accountOut(Long userId, BigDecimal amount, BigDecimal freezeAmount) {
+        try {
+            int count = extUserAccountMapper.accountOut(userId, amount, freezeAmount);
+            if (count <= 0) {
+                LOGGER.error("用户账户出账失败，余额不足，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("用户账户余额不足");
+            }
         } catch (DataAccessException e1) {
             LOGGER.error("用户账户出账失败，userId={},errCode={}", userId, ResultCode.DATABASE_EXCEPTION);
             throw new CommonException("用户账户出账失败");

@@ -27,6 +27,14 @@
     gmt_modified
   </sql>
 
+  <select id="lockByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_account
+    where user_id = #{userId,jdbcType=BIGINT}
+    for update
+  </select>
+
   <update id="accountIn">
     update user_account
     set totol_amount = totol_amount + #{amount,jdbcType=DECIMAL},
@@ -37,8 +45,9 @@
 
   <update id="accountOut">
     update user_account
-    set totol_amount = totol_amount - #{amount,jdbcType=DECIMAL},
-    avail_amount = avail_amount - #{amount,jdbcType=DECIMAL}
+    set totol_amount = totol_amount - #{amount,jdbcType=DECIMAL}+#{freezeAmount,jdbcType=DECIMAL},
+    avail_amount = avail_amount - #{amount,jdbcType=DECIMAL},
+    freeze_amount = freeze_amount + #{freezeAmount,jdbcType=DECIMAL}
     where user_id = #{userId,jdbcType=BIGINT}
     and totol_amount - #{amount,jdbcType=DECIMAL} >=0
   </update>

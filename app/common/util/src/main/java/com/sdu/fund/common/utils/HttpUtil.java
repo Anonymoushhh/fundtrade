@@ -214,6 +214,9 @@ public class HttpUtil {
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
             conn.setDoInput(true);
+            // 设置超时时间
+            conn.setConnectTimeout(2000);
+            conn.setReadTimeout(2000);
             // 获取URLConnection对象对应的输出流
             out = new PrintWriter(conn.getOutputStream());
             // 发送请求参数

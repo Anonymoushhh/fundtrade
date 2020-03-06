@@ -29,10 +29,9 @@ public class UserQueryServiceImpl implements UserQueryService {
 
     @Override
     public User queryLoginUser(String token) {
-        Result<Long> result = userTokenRepository.getUserIdByToken(token);
-        if (result != null && result.isSuccess()) {
-            Long userId = result.getData();
-            return userRepository.get(userId).getData();
+        Long userId= userTokenRepository.getUserIdByToken(token);
+        if (userId != null) {
+            return userRepository.get(userId);
         }
         return null;
     }

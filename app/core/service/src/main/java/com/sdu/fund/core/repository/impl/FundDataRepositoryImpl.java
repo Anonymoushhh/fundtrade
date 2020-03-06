@@ -2,8 +2,7 @@ package com.sdu.fund.core.repository.impl;
 
 import com.sdu.fund.common.code.ResultCode;
 import com.sdu.fund.common.dal.mapper.FundDataMapper;
-import com.sdu.fund.common.result.Result;
-import com.sdu.fund.common.utils.ResultUtil;
+import com.sdu.fund.common.exception.CommonException;
 import com.sdu.fund.common.validator.Validator;
 import com.sdu.fund.core.converter.FundDataConverter;
 import com.sdu.fund.core.model.trade.bo.FundData;
@@ -27,102 +26,82 @@ public class FundDataRepositoryImpl implements FundDataRepository {
     private FundDataMapper fundDataMapper;
 
     @Override
-    public Result<FundData> get(String fundCode) {
+    public FundData get(String fundCode) {
         Validator.notNull(fundCode);
         try {
             FundData fundData =
                     FundDataConverter.FundDataDoconvert2FundData(fundDataMapper.selectByPrimaryKey(fundCode));
-            return ResultUtil.buildSuccessResult(fundData);
+            return fundData;
         } catch (DataAccessException e1) {
             LOGGER.error("基金数值信息查询失败，fundCode={},errCode={}", fundCode, ResultCode.DATABASE_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金数值信息查询失败");
         } catch (Exception e2) {
             LOGGER.error("基金数值信息查询失败，fundCode={},errCode={}", fundCode, ResultCode.SERVER_EXCEPTION);
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金数值信息查询失败");
         }
     }
 
 
     @Override
-    public Result add(FundData fundData) {
-        // 预校验
-        boolean check = preCheck(fundData);
-        if (!check) {
-            LOGGER.error("基金数值信息插入失败，fundCode={},errCode={}", fundData.getFundCode(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void add(FundData fundData) {
         try {
+            preCheck(fundData);
             int id = fundDataMapper.insertSelective(FundDataConverter.FundDataconvert2FundDataDo(fundData));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("基金数值信息插入失败，fundode={},errCode={}", fundData.getFundCode(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金数值信息插入失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金数值信息插入失败，fundCode={},errCode={},msg={}", fundData.getFundCode(),
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金数值信息插入失败");
         } catch (Exception e2) {
             LOGGER.error("基金数值信息插入失败，fundCode={},errCode={},msg={}", fundData.getFundCode(),
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金数值信息插入失败");
         }
     }
 
     @Override
-    public Result update(FundData fundData) {
-        // 预校验
-        boolean check = preCheck(fundData);
-        if (!check) {
-            LOGGER.error("基金数值信息更新失败，fundCode={},errCode={}", fundData.getFundCode(),
-                    ResultCode.PARAMETER_ILLEGAL);
-            return ResultUtil.buildFailedResult(ResultCode.PARAMETER_ILLEGAL);
-        }
-
+    public void update(FundData fundData) {
         try {
+            preCheck(fundData);
             int id =
                     fundDataMapper.updateByPrimaryKeySelective(FundDataConverter.FundDataconvert2FundDataDo(fundData));
-            if (id > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (id <= 0) {
                 LOGGER.error("基金数值信息更新失败，fundCode={},errCode={}", fundData.getFundCode(),
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金数值信息更新失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金数值信息更新失败，fundCode={},errCode={},msg={}", fundData.getFundCode(),
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金数值信息更新失败");
         } catch (Exception e2) {
             LOGGER.error("基金数值信息更新失败，fundCode={},errCode={},msg={}", fundData.getFundCode(),
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金数值信息更新失败");
         }
     }
 
     @Override
-    public Result delete(String fundCode) {
+    public void delete(String fundCode) {
         try {
             int count = fundDataMapper.deleteByPrimaryKey(fundCode);
-            if (count > 0) {
-                return ResultUtil.buildSuccessResult();
-            } else {
+            if (count <= 0) {
                 LOGGER.error("基金数值信息删除失败，fundCode={},errCode={}", fundCode,
                         ResultCode.DATABASE_EXCEPTION);
-                return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+                throw new CommonException("基金数值信息删除失败");
             }
         } catch (DataAccessException e1) {
             LOGGER.error("基金数值信息删除失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.DATABASE_EXCEPTION, e1.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.DATABASE_EXCEPTION);
+            throw new CommonException("基金数值信息删除失败");
         } catch (Exception e2) {
             LOGGER.error("基金数值信息删除失败，fundCode={},errCode={},msg={}", fundCode,
                     ResultCode.SERVER_EXCEPTION, e2.getMessage());
-            return ResultUtil.buildFailedResult(ResultCode.SERVER_EXCEPTION);
+            throw new CommonException("基金数值信息删除失败");
         }
     }
 
@@ -133,7 +112,8 @@ public class FundDataRepositoryImpl implements FundDataRepository {
      * @author anonymous
      * @date 2019/11/29
      */
-    private boolean preCheck(FundData fundData) {
-        return Validator.notNull(fundData) && Validator.notNull(fundData.getFundCode());
+    private void preCheck(FundData fundData) {
+        Validator.notNull(fundData);
+        Validator.notNull(fundData.getFundCode());
     }
 }

@@ -60,12 +60,23 @@ public class UserAccount {
                                                 BigDecimal freezeAmount,
                                                 UserAccountTypeEnum type, UserAccountStatusEnum status) {
         UserAccount userAccount = new UserAccount();
-        userAccount.userId = userId;
-        userAccount.totolAmount = totolAmount;
-        userAccount.availAmount = availAmount;
-        userAccount.freezeAmount= freezeAmount;
-        userAccount.type = type;
-        userAccount.status = status;
+        userAccount.setUserId(userId);
+        userAccount.setTotolAmount(totolAmount);
+        userAccount.setAvailAmount(availAmount);
+        userAccount.setFreezeAmount(freezeAmount);
+        userAccount.setType(type);
+        userAccount.setStatus(status);
+        return userAccount;
+    }
+
+    public static UserAccount initUserAccount(Long userId) {
+        UserAccount userAccount = new UserAccount();
+        userAccount.setUserId(userId);
+        userAccount.setTotolAmount(new BigDecimal(0));
+        userAccount.setAvailAmount(new BigDecimal(0));
+        userAccount.setFreezeAmount(new BigDecimal(0));
+        userAccount.setType(UserAccountTypeEnum.TEST);
+        userAccount.setStatus(UserAccountStatusEnum.NORMAL);
         return userAccount;
     }
 

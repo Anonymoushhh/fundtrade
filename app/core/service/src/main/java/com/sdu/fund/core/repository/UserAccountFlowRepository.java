@@ -12,4 +12,6 @@ public interface UserAccountFlowRepository extends Repository<UserAccountFlow,Lo
 
     public UserAccountFlow lock(Long flowId);
 
+    public void makeInValid(Long flowId);
+
 }

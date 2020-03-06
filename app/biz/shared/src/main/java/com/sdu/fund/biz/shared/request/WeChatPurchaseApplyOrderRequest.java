@@ -12,11 +12,14 @@ public class WeChatPurchaseApplyOrderRequest extends BaseOrderRequest {
 
     private String fundName;
 
-    // 付款金额
-    private String tradeOrderAmount;
+    // 幂等号
+    private String idempotentId;
+
+    // 预购买金额
+    private String orderAmount;
 
     // 下单渠道
-    private String tradeOrderChannel;
+    private String orderChannel;
 
     // 费率
     private String fee;
@@ -49,20 +52,28 @@ public class WeChatPurchaseApplyOrderRequest extends BaseOrderRequest {
         this.fundName = fundName;
     }
 
-    public String getTradeOrderAmount() {
-        return tradeOrderAmount;
+    public String getIdempotentId() {
+        return idempotentId;
     }
 
-    public String getTradeOrderChannel() {
-        return tradeOrderChannel;
+    public void setIdempotentId(String idempotentId) {
+        this.idempotentId = idempotentId;
     }
 
-    public void setTradeOrderChannel(String tradeOrderChannel) {
-        this.tradeOrderChannel = tradeOrderChannel;
+    public String getOrderAmount() {
+        return orderAmount;
     }
 
-    public void setTradeOrderAmount(String tradeOrderAmount) {
-        this.tradeOrderAmount = tradeOrderAmount;
+    public String getOrderChannel() {
+        return orderChannel;
+    }
+
+    public void setOrderChannel(String orderChannel) {
+        this.orderChannel = orderChannel;
+    }
+
+    public void setOrderAmount(String orderAmount) {
+        this.orderAmount = orderAmount;
     }
 
     public String getFee() {

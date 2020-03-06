@@ -106,6 +106,7 @@ public class UserAccountFlow {
                                              BigDecimal preFreezeAmount, BigDecimal freezeAmount) {
         UserAccountFlow userAccountFlow = new UserAccountFlow();
         userAccountFlow.setFlowId(SnowflakeIdUtil.getInstance().nextId());
+        userAccountFlow.setUserId(payment.getUserId());
         userAccountFlow.setRelatedOrderId(payment.getOrderId());
         userAccountFlow.setRelatedFlowId(String.valueOf(relatedFlowId));
         userAccountFlow.setChangeDirection(changeDirection);
@@ -125,13 +126,13 @@ public class UserAccountFlow {
             userAccountFlow.setPostFreezeAmount(preFreezeAmount.add(freezeAmount));
         } else if (changeDirection == UserAccountChangeDirectionEnum.OUT) {
             /**
-             * 出账：总金额 -= 订单总额
+             * 出账：总金额 -= 总金额 - 订单总额 + 冻结金额
              *      可用金额 -= 订单总额
-             *      冻结金额不变
+             *      冻结金额 += 订单冻结金额
              */
-            userAccountFlow.setPostTotolAmount(preTotolAmount.subtract(payment.getOrderAmount()));
+            userAccountFlow.setPostTotolAmount(preTotolAmount.subtract(payment.getOrderAmount()).add(freezeAmount));
             userAccountFlow.setPostAvailAmount(preAvailAmount.subtract(payment.getOrderAmount()));
-            userAccountFlow.setPostFreezeAmount(preFreezeAmount);
+            userAccountFlow.setPostFreezeAmount(preFreezeAmount.add(freezeAmount));
         } else {
             throw new CommonException("不支持的账务方向");
         }

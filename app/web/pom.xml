@@ -10,7 +10,6 @@
 
     <artifactId>fundtrade-web</artifactId>
     <packaging>jar</packaging>
-
     <dependencies>
         <!-- service dependency -->
         <dependency>
@@ -46,6 +45,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

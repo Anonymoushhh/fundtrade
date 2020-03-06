@@ -1,7 +1,7 @@
-package com.sdu.fund.vo;
+package com.sdu.fund.biz.shared.vo;
 
 
-import com.sdu.fund.enums.CodeEnum;
+import com.sdu.fund.biz.shared.enums.CodeEnum;
 
 /**
  * @program: fundtrade
